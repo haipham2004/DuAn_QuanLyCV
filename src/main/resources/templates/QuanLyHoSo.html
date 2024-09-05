@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý CV</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .container {
+            margin-top: 20px;
+        }
+        .modal-header {
+            background-color: #343a40;
+            color: #fff;
+        }
+        .modal-footer .btn {
+            border-radius: 0;
+        }
+        .btn-primary, .btn-secondary {
+            border-radius: 0;
+        }
+        .table th, .table td {
+            text-align: center;
+        }
+        .table th {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="mb-4">Quản Lý CV</h1>
+    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#cvModal">
+        Thêm CV
+    </button>
+
+    <table id="cvTable" class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Ngày Nộp</th>
+            <th>Họ Tên</th>
+<!--            <th>Giới Tính</th>-->
+<!--            <th>Email</th>-->
+            <th>SĐT</th>
+<!--            <th>Thành Phố</th>-->
+            <th>Vị Trí</th>
+<!--            <th>Kinh Nghiệm</th>-->
+<!--            <th>Ghi Chú</th>-->
+            <th>Link CV</th>
+            <th>Nguồn Tuyển Dụng</th>
+            <th>Trạng Thái</th>
+            <th>Người Quản Lý</th>
+            <th>Hành Động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Rows will be added here by jQuery -->
+        </tbody>
+    </table>
+
+    <!-- Modal for adding/editing CV -->
+    <div class="modal fade" id="cvModal" tabindex="-1" aria-labelledby="cvModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cvModalLabel">Thêm/Sửa CV</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="cvForm">
+                        <div class="mb-3">
+                            <label for="cvId" class="form-label">CV_ID</label>
+                            <input type="text" class="form-control" id="cvId" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="applyDate" class="form-label">Ngày Nộp</label>
+                            <input type="date" class="form-control" id="applyDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label">Họ Tên</label>
+                            <input type="text" class="form-control" id="fullName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Giới Tính</label>
+                            <select class="form-select" id="gender" required>
+                                <option value="Male">Nam</option>
+                                <option value="Female">Nữ</option>
+                                <option value="Other">Khác</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">SĐT</label>
+                            <input type="text" class="form-control" id="phone" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="city" class="form-label">Thành Phố</label>
+                            <input type="text" class="form-control" id="city" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jobName" class="form-label">Vị Trí</label>
+                            <input type="text" class="form-control" id="jobName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="experience" class="form-label">Kinh Nghiệm</label>
+                            <input type="text" class="form-control" id="experience" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="note" class="form-label">Ghi Chú</label>
+                            <textarea class="form-control" id="note" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cvLink" class="form-label">Link CV</label>
+                            <input type="url" class="form-control" id="cvLink" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="source" class="form-label">Nguồn Tuyển Dụng</label>
+                            <input type="text" class="form-control" id="source" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Trạng Thái</label>
+                            <select class="form-select" id="status" required>
+                                <option value="Not Interviewed">Chưa Phỏng Vấn</option>
+                                <option value="Passed Interview">Đậu Phỏng Vấn</option>
+                                <option value="Failed Interview">Rớt Phỏng Vấn</option>
+                                <option value="Consider Later">Cân Nhắc Sau</option>
+                                <option value="Quit">Nghỉ Việc</option>
+                                <option value="Terminated">Bị Thôi Việc</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hrUser" class="form-label">Người Quản Lý</label>
+                            <input type="text" class="form-control" id="hrUser" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="saveCvButton">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Function to load data from API
+        function loadCvData() {
+            $.ajax({
+                url: 'http://localhost:8080/ho-so/hien-thi',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var tableBody = $('#cvTable tbody');
+                    tableBody.empty(); // Clear existing rows
+
+                    // Loop through data and append rows
+                    $.each(data, function(index, cv) {
+                        var row = `<tr>
+
+                        <td>${cv.applyDatetime}</td>
+                        <td>${cv.fullName}</td>
+
+                        <td>${cv.tel}</td>
+
+                        <td>${cv.jobName}</td>
+
+                        <td><a href="${cv.linkCv}" target="_blank">Xem CV</a></td>
+                        <td>${cv.nguonTuyenDung}</td>
+                        <td>${cv.trangThai}</td>
+                        <td>${cv.tenNhanVien}</td>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm edit-button" data-id="${cv.cvId}">
+                                Sửa
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm delete-button" data-id="${cv.cvId}">
+                                Xóa
+                            </button>
+                        </td>
+                    </tr>`;
+                        tableBody.append(row);
+                    });
+
+                    // Add event handlers for edit and delete buttons
+                    $('.edit-button').on('click', function() {
+                        var cvId = $(this).data('id');
+                        // Handle edit logic
+                    });
+
+                    $('.delete-button').on('click', function() {
+                        var cvId = $(this).data('id');
+                        // Handle delete logic
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching CV data:', error);
+                }
+            });
+        }
+
+        // Load CV data when the page is ready
+        loadCvData();
+
+        // Handle save button click in the modal
+        $('#saveCvButton').on('click', function() {
+            var cv = {
+                cvId: $('#cvId').val(),
+                applyDate: $('#applyDate').val(),
+                fullName: $('#fullName').val(),
+                gender: $('#gender').val(),
+                email: $('#email').val(),
+                phone: $('#phone').val(),
+                city: $('#city').val(),
+                jobName: $('#jobName').val(),
+                experience: $('#experience').val(),
+                note: $('#note').val(),
+                cvLink: $('#cvLink').val(),
+                source: $('#source').val(),
+                status: $('#status').val(),
+                hrUser: $('#hrUser').val()
+            };
+
+            $.ajax({
+                url: 'http://localhost:8080/ho-so/them', // Update URL if needed
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(cv),
+                success: function(response) {
+                    $('#cvModal').modal('hide');
+                    loadCvData(); // Reload data after adding
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error saving CV data:', error);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

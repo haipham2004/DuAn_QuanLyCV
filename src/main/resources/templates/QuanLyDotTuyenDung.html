@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Đợt Tuyển Dụng</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .container {
+            margin-top: 20px;
+        }
+        .modal-header {
+            background-color: #343a40;
+            color: #fff;
+        }
+        .modal-footer .btn {
+            border-radius: 0;
+        }
+        .btn-primary, .btn-secondary {
+            border-radius: 0;
+        }
+        .table th, .table td {
+            text-align: center;
+        }
+        .table th {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="mb-4">Quản Lý Đợt Tuyển Dụng</h1>
+    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#recruitmentModal">
+        Thêm Đợt Tuyển Dụng
+    </button>
+
+    <table id="recruitmentTable" class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Mã Đợt Tuyển Dụng</th>
+            <th>Tên Đợt Tuyển Dụng</th>
+            <th>Nội Dung</th>
+            <th>Deadline Tuyển Dụng</th>
+            <th>Người Tạo</th>
+            <th>Hành Động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Rows will be added here by jQuery -->
+        </tbody>
+    </table>
+
+    <!-- Modal for adding/editing recruitment -->
+    <div class="modal fade" id="recruitmentModal" tabindex="-1" aria-labelledby="recruitmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recruitmentModalLabel">Thêm/Sửa Đợt Tuyển Dụng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="recruitmentForm">
+                        <div class="mb-3">
+                            <label for="recruitmentCode" class="form-label">Mã Đợt Tuyển Dụng</label>
+                            <input type="text" class="form-control" id="recruitmentCode" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recruitmentName" class="form-label">Tên Đợt Tuyển Dụng</label>
+                            <input type="text" class="form-control" id="recruitmentName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recruitmentContent" class="form-label">Nội Dung</label>
+                            <textarea class="form-control" id="recruitmentContent" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recruitmentDeadline" class="form-label">Deadline Tuyển Dụng</label>
+                            <input type="date" class="form-control" id="recruitmentDeadline" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recruitmentUser" class="form-label">Người Tạo</label>
+                            <input type="text" class="form-control" id="recruitmentUser" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="saveRecruitmentButton">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Function to load data from API
+        function loadRecruitmentData() {
+            $.ajax({
+                url: 'http://localhost:8080/dot-tuyen-dung/hien-thi',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var tableBody = $('#recruitmentTable tbody');
+                    tableBody.empty(); // Clear existing rows
+
+                    // Loop through data and append rows
+                    $.each(data, function(index, recruitment) {
+                        var row = `<tr>
+                        <td>${recruitment.maDotTuyenDung}</td>
+                        <td>${recruitment.tenDotTuyenDung}</td>
+                        <td>${recruitment.noiDung}</td>
+                        <td>${recruitment.deadline}</td>
+                        <td>${recruitment.tenNhanVien}</td>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm edit-button" data-id="${recruitment.recruitmentCode}">
+                                Sửa
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm delete-button" data-id="${recruitment.recruitmentCode}">
+                                Xóa
+                            </button>
+                        </td>
+                    </tr>`;
+                        tableBody.append(row);
+                    });
+
+                    // Add event handlers for edit and delete buttons
+                    $('.edit-button').on('click', function() {
+                        var recruitmentCode = $(this).data('id');
+                        // Handle edit logic
+                    });
+
+                    $('.delete-button').on('click', function() {
+                        var recruitmentCode = $(this).data('id');
+                        // Handle delete logic
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching recruitment data:', error);
+                }
+            });
+        }
+
+        // Load recruitment data when the page is ready
+        loadRecruitmentData();
+
+        // Handle save button click in the modal
+        $('#saveRecruitmentButton').on('click', function() {
+            var recruitment = {
+                recruitmentCode: $('#recruitmentCode').val(),
+                recruitmentName: $('#recruitmentName').val(),
+                recruitmentContent: $('#recruitmentContent').val(),
+                recruitmentDeadline: $('#recruitmentDeadline').val(),
+                recruitmentUser: $('#recruitmentUser').val()
+            };
+
+            $.ajax({
+                url: 'http://localhost:8080/dot-tuyen-dung/them', // Update URL if needed
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(recruitment),
+                success: function(response) {
+                    $('#recruitmentModal').modal('hide');
+                    loadRecruitmentData(); // Reload data after adding
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error saving recruitment data:', error);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
