@@ -8,23 +8,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImp implements RoleService {
 
-    private RoleRepository repository;
+    private RoleRepository roleRepository;
 
     private ModelMapper modelMapper;
 
     @Autowired
-    public RoleServiceImp(RoleRepository repository, ModelMapper modelMapper) {
-        this.repository = repository;
+    public RoleServiceImp(RoleRepository roleRepository, ModelMapper modelMapper) {
+        this.roleRepository = roleRepository;
         this.modelMapper = modelMapper;
     }
 
     @Override
     public List<RolesDTO> getAll() {
-        return null;
+        return roleRepository.findAll().stream().map((roles)-> modelMapper.map(roles,RolesDTO.class)).collect(Collectors.toList());
     }
 
     @Override

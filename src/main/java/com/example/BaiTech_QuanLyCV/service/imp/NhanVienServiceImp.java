@@ -13,6 +13,9 @@ import com.example.BaiTech_QuanLyCV.repository.ViTriCongViecRepository;
 import com.example.BaiTech_QuanLyCV.service.NhanVienService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,7 +46,7 @@ public class NhanVienServiceImp implements NhanVienService {
 
     @Override
     public List<NhanVienDTO> getAll() {
-        return nhanVienRepository.findAll().stream()
+        return nhanVienRepository.getAllJoinFetch().stream()
                 .map((nhanVien) -> modelMapper.map(nhanVien, NhanVienDTO.class)).collect(Collectors.toList());
     }
 
@@ -57,8 +60,12 @@ public class NhanVienServiceImp implements NhanVienService {
 
         NhanVien nhanVien = modelMapper.map(nhanVienDTO, NhanVien.class);
 
-        Account account = accountRepository.findById(nhanVienDTO.getIdAccount())
-                .orElseThrow(() -> new ResourceNotfound("Không tồn tại Account có id: " + nhanVienDTO.getIdAccount()));
+        Account account = accountRepository.findByMaAccount(nhanVienDTO.getMaAccount());
+
+        if (account == null) {
+            throw new ResourceNotfound("Không tồn tại Account có mã: " + nhanVienDTO.getMaAccount());
+        }
+
 
         Roles roles = roleRepository.findById(nhanVienDTO.getIdRoles())
                 .orElseThrow(() -> new ResourceNotfound("Không tồn tại Roles có id: " + nhanVienDTO.getIdRoles()));
@@ -76,8 +83,8 @@ public class NhanVienServiceImp implements NhanVienService {
     @Override
     public NhanVienDTO update(NhanVienDTO nhanVienDTO, Integer id) {
         NhanVien nhanVien = nhanVienRepository.findById(id).orElseThrow(() -> new ResourceNotfound("Không tồn tại nhân viên có id: " + id));
-        Account account = accountRepository.findById(nhanVienDTO.getIdAccount())
-                .orElseThrow(() -> new ResourceNotfound("Không tồn tại Account có id: " + nhanVienDTO.getIdAccount()));
+        Account account = accountRepository.findById(nhanVienDTO.getMaAccount())
+                .orElseThrow(() -> new ResourceNotfound("Không tồn tại Account có id: " + nhanVienDTO.getMaAccount()));
 
         Roles roles = roleRepository.findById(nhanVienDTO.getIdRoles())
                 .orElseThrow(() -> new ResourceNotfound("Không tồn tại Roles có id: " + nhanVienDTO.getIdRoles()));
@@ -98,6 +105,18 @@ public class NhanVienServiceImp implements NhanVienService {
 
     @Override
     public void delete(Integer id) {
+          NhanVien nhanVien=nhanVienRepository.findById(id).orElseThrow(() -> new ResourceNotfound("Không tồn tại nhân viên có id: " + id));
+          nhanVienRepository.softDeleteNhanVien(id);
+    }
 
+    @Override
+    public Page<NhanVienDTO> searchNhanVien(String maNhanVien, String tenNhanVien, String email, Pageable pageable) {
+        Page<NhanVien> nhanVienPage = nhanVienRepository.searchNhanVien(maNhanVien, tenNhanVien, email, pageable);
+
+        List<NhanVienDTO> nhanVienDTOs = nhanVienPage.getContent().stream()
+                .map((nhanVien) ->modelMapper.map(nhanVien,NhanVienDTO.class))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(nhanVienDTOs, pageable, nhanVienPage.getTotalElements());
     }
 }
