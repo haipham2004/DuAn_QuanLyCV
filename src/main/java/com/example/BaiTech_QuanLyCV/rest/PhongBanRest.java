@@ -1,9 +1,15 @@
 package com.example.BaiTech_QuanLyCV.rest;
 
+import com.example.BaiTech_QuanLyCV.dto.NhanVienDTO;
+import com.example.BaiTech_QuanLyCV.dto.PhongBanDTO;
 import com.example.BaiTech_QuanLyCV.service.PhongBanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,5 +29,20 @@ public class PhongBanRest {
     @GetMapping("hien-thi")
     public ResponseEntity<List> getAll(){
         return ResponseEntity.ok(phongBanService.getAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PhongBanDTO> getOne(@PathVariable("id") Integer id){
+        return ResponseEntity.ok(phongBanService.getOne(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<PhongBanDTO> save(@RequestBody PhongBanDTO phongBanDTO){
+        return ResponseEntity.ok(phongBanService.save(phongBanDTO));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PhongBanDTO> update(@RequestBody PhongBanDTO phongBanDTO,@PathVariable("id") Integer id){
+        return ResponseEntity.ok(phongBanService.update(phongBanDTO,id));
     }
 }

@@ -29,7 +29,9 @@ public class NhanVienDTO {
 
     private String tenViTriCongViec;
 
-    private Integer idAccount;
+    private Integer nhanVienIdNhanVien;
+
+    private String tenNhanVienNhanVien;
 
     private String maAccount;
 
