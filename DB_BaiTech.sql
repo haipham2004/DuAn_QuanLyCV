@@ -133,13 +133,35 @@ INSERT INTO Roles (ma, authority) VALUES
 
 -- Thêm dữ liệu mẫu vào bảng PhongBan
 INSERT INTO PhongBan (ma_phong_ban, ten_phong_ban) VALUES 
-('PB001', N'Phòng Nhân Sự'), 
-('PB002', N'Phòng Kỹ Thuật');
+('PB001', N'Phòng Nhân Sự'),
+('PB002', N'Phòng Kỹ Thuật'),
+('PB003', N'Phòng Tài Chính'),
+('PB004', N'Phòng Marketing'),
+('PB005', N'Phòng Bán Hàng'),
+('PB006', N'Phòng Hỗ Trợ Kỹ Thuật'),
+('PB007', N'Phòng Sản Xuất'),
+('PB008', N'Phòng Nghiên Cứu & Phát Triển'),
+('PB009', N'Phòng Pháp Lý'),
+('PB010', N'Phòng Quản Trị'),
+('PB011', N'Phòng Đào Tạo'),
+('PB012', N'Phòng Dịch Vụ Khách Hàng');
+
 
 -- Thêm dữ liệu mẫu vào bảng ViTriCongViec
 INSERT INTO ViTriCongViec (ma_vi_tri, ten_vi_tri, level) VALUES 
-('VT001', N'Nhân viên Kỹ thuật', 'Junior'), 
-('VT002', N'Trưởng phòng Nhân sự', 'Manager');
+('VT001', N'Nhân viên Kỹ thuật', 'Junior'),
+('VT002', N'Trưởng phòng Nhân sự', 'Manager'),
+('VT003', N'Nhân viên Marketing', 'Senior'),
+('VT004', N'Trưởng phòng Bán hàng', 'Manager'),
+('VT005', N'Nhân viên Hỗ trợ kỹ thuật', 'Mid'),
+('VT006', N'Giám đốc Sản xuất', 'Director'),
+('VT007', N'Nhân viên Nghiên cứu & Phát triển', 'Senior'),
+('VT008', N'Nhân viên Pháp lý', 'Junior'),
+('VT009', N'Nhân viên Quản trị', 'Mid'),
+('VT010', N'Nhân viên Đào tạo', 'Junior'),
+('VT011', N'Chuyên viên Dịch vụ Khách hàng', 'Senior'),
+('VT012', N'Giám đốc Tài chính', 'Director');
+
 
 -- Thêm dữ liệu mẫu vào bảng NhanVien
 INSERT INTO NhanVien (ma_nhan_vien, ten_nhan_vien, email, sdt, vi_tri_id, nhan_vien_quan_ly_id, ma_account, roles_id) VALUES 

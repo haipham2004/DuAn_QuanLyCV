@@ -1,13 +1,17 @@
 package com.example.BaiTech_QuanLyCV.service.imp;
 
-import com.example.BaiTech_QuanLyCV.dto.NhanVienDTO;
+import com.example.BaiTech_QuanLyCV.dto.PhongBanDTO;
 import com.example.BaiTech_QuanLyCV.dto.ViTriCongViecDTO;
+import com.example.BaiTech_QuanLyCV.entity.PhongBan;
 import com.example.BaiTech_QuanLyCV.entity.ViTriCongViec;
 import com.example.BaiTech_QuanLyCV.exception.ResourceNotfound;
 import com.example.BaiTech_QuanLyCV.repository.ViTriCongViecRepository;
 import com.example.BaiTech_QuanLyCV.service.ViTriCongViecService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,5 +61,16 @@ public class ViTriCongViecServiceImp implements ViTriCongViecService {
     @Override
     public void delete(Integer id) {
 
+    }
+
+    @Override
+    public Page<ViTriCongViecDTO> searchViTriCongViec(String maViTri, String tenViTri, String level, Pageable pageable) {
+        Page<ViTriCongViec> viTriCongViecPage = viTriCongViecRepository.searchViTriCongViec(maViTri, tenViTri,level,pageable);
+
+        List<ViTriCongViecDTO> viTriCongViecDTOS = viTriCongViecPage.getContent().stream()
+                .map((viTriCongViec) ->modelMapper.map(viTriCongViec,ViTriCongViecDTO.class))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(viTriCongViecDTOS, pageable, viTriCongViecPage.getTotalElements());
     }
 }

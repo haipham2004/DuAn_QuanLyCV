@@ -76,7 +76,6 @@ public class NhanVienServiceImp implements NhanVienService {
         nhanVien.setAccount(account);
         nhanVien.setRoles(roles);
         nhanVien.setViTriCongViec(viTriCongViec);
-        nhanVien.setDeletedAt(false);
         NhanVien nhanVienSave = nhanVienRepository.save(nhanVien);
         return modelMapper.map(nhanVienSave, NhanVienDTO.class);
     }
@@ -121,3 +120,4 @@ public class NhanVienServiceImp implements NhanVienService {
         return new PageImpl<>(nhanVienDTOs, pageable, nhanVienPage.getTotalElements());
     }
 }
+
