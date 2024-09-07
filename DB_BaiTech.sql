@@ -168,3 +168,4 @@ INSERT INTO Activity (activity_type, activity_note, user_id, share, create_date)
 
 
 SELECT*FROM NhanVien
+UPDATE NhanVien set deleted_at=0
