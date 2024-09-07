@@ -74,7 +74,6 @@
         </tbody>
     </table>
 
-    <!-- Modal for adding/editing employee -->
     <!-- Modal để thêm nhân viên -->
     <div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="employeeModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -283,7 +282,7 @@
     });
 
 
-    // Gán sự kiện click cho các nút edit-button khi tài liệu đã sẵn sàng
+
     $(document).on('click', '.edit-button', function() {
         var nhanVienId = $(this).data('id');
 
@@ -371,7 +370,7 @@
     // Hàm tải danh sách vị trí công việc và điền vào select box
     function loadViTriCongViecs(selectedId) {
         $.ajax({
-            url: 'http://localhost:8080/vi-tri-cong-viec/hien-thi',
+            url: 'http://localhost:8080/vi-tri-cong-viec/hien-thi2',
             method: 'GET',
             success: function (data) {
                 var viTriSelect = $('#addViTriCongViec');
@@ -403,8 +402,8 @@
                 nhanVienSelect.empty();
                 nhanVienSelect.append('<option value="">Chọn nhân viên quản lý</option>');
                 data.forEach(function (item) {
-                    var selected = item.nhanVienId === selectedId ? 'selected' : '';
-                    nhanVienSelect.append('<option value="' + item.nhanVienId + '" ' + selected + '>' + item.tenNhanVien + '</option>');
+                    var selected = item.nhanVienIdNhanVien === selectedId ? 'selected' : '';
+                    nhanVienSelect.append('<option value="' + item.nhanVienIdNhanVien + '" ' + selected + '>' + item.tenNhanVien + '</option>');
                 });
             },
             error: function () {
@@ -470,7 +469,7 @@
     // Hàm tải danh sách vị trí công việc và điền vào select box
     function loadViTriCongViec(selectedId) {
         $.ajax({
-            url: 'http://localhost:8080/vi-tri-cong-viec/hien-thi',
+            url: 'http://localhost:8080/vi-tri-cong-viec/hien-thi2',
             method: 'GET',
             success: function (data) {
                 var viTriSelect = $('#editViTriCongViec');
@@ -687,11 +686,11 @@
                 <td>
 
 
- <button type="button" class="btn btn-warning btn-sm edit-button"
-        data-bs-toggle="modal" data-bs-target="#myModalEdit"
-        data-id="${employee.nhanVienId}">
-    Sửa
-</button>
+                     <button type="button" class="btn btn-warning btn-sm edit-button"
+                            data-bs-toggle="modal" data-bs-target="#myModalEdit"
+                            data-id="${employee.nhanVienId}">
+                        Sửa
+                    </button>
 
 
                     <button type="button" class="btn btn-danger btn-sm delete-button" data-id="${employee.nhanVienId}">
