@@ -76,6 +76,7 @@ public class NhanVienServiceImp implements NhanVienService {
         nhanVien.setAccount(account);
         nhanVien.setRoles(roles);
         nhanVien.setViTriCongViec(viTriCongViec);
+        nhanVien.setDeletedAt(false);
         NhanVien nhanVienSave = nhanVienRepository.save(nhanVien);
         return modelMapper.map(nhanVienSave, NhanVienDTO.class);
     }
@@ -105,8 +106,8 @@ public class NhanVienServiceImp implements NhanVienService {
 
     @Override
     public void delete(Integer id) {
-          NhanVien nhanVien=nhanVienRepository.findById(id).orElseThrow(() -> new ResourceNotfound("Không tồn tại nhân viên có id: " + id));
-          nhanVienRepository.softDeleteNhanVien(id);
+        NhanVien nhanVien=nhanVienRepository.findById(id).orElseThrow(() -> new ResourceNotfound("Không tồn tại nhân viên có id: " + id));
+        nhanVienRepository.softDeleteNhanVien(id);
     }
 
     @Override
