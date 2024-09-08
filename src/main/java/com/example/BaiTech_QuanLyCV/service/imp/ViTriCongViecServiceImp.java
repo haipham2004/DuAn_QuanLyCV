@@ -38,37 +38,39 @@ public class ViTriCongViecServiceImp implements ViTriCongViecService {
 
     @Override
     public ViTriCongViecDTO getOne(Integer id) {
-        return modelMapper.map(viTriCongViecRepository.findById(id).orElseThrow(()-> new ResourceNotfound("Khong ton tai vi tri cong viec co id: "+id)), ViTriCongViecDTO.class);
+        return modelMapper.map(viTriCongViecRepository.findById(id).orElseThrow(() -> new ResourceNotfound("Khong ton tai vi tri cong viec co id: " + id)), ViTriCongViecDTO.class);
     }
 
     @Override
     public ViTriCongViecDTO save(ViTriCongViecDTO viTriCongViecDTO) {
-        ViTriCongViec viTriCongViec=modelMapper.map(viTriCongViecDTO,ViTriCongViec.class);
-        ViTriCongViec viTriCongViecSave=viTriCongViecRepository.save(viTriCongViec);
-        return modelMapper.map(viTriCongViecSave,ViTriCongViecDTO.class);
+        ViTriCongViec viTriCongViec = modelMapper.map(viTriCongViecDTO, ViTriCongViec.class);
+        viTriCongViec.setDeletedAt(false);
+        ViTriCongViec viTriCongViecSave = viTriCongViecRepository.save(viTriCongViec);
+        return modelMapper.map(viTriCongViecSave, ViTriCongViecDTO.class);
     }
 
     @Override
     public ViTriCongViecDTO update(ViTriCongViecDTO viTriCongViecDTO, Integer id) {
-        ViTriCongViec viTriCongViec=viTriCongViecRepository.findById(id).orElseThrow(()-> new ResourceNotfound("Khong ton tai vi tri cong viec co id: "+id));
+        ViTriCongViec viTriCongViec = viTriCongViecRepository.findById(id).orElseThrow(() -> new ResourceNotfound("Khong ton tai vi tri cong viec co id: " + id));
         viTriCongViec.setMaViTri(viTriCongViecDTO.getMaViTri());
         viTriCongViec.setTenViTri(viTriCongViecDTO.getTenViTri());
         viTriCongViec.setLevel(viTriCongViecDTO.getLevel());
-        ViTriCongViec viTriCongViecUpdate=viTriCongViecRepository.save(viTriCongViec);
-        return modelMapper.map(viTriCongViecUpdate,ViTriCongViecDTO.class);
+        ViTriCongViec viTriCongViecUpdate = viTriCongViecRepository.save(viTriCongViec);
+        return modelMapper.map(viTriCongViecUpdate, ViTriCongViecDTO.class);
     }
 
     @Override
     public void delete(Integer id) {
-
+        ViTriCongViec viTriCongViec = viTriCongViecRepository.findById(id).orElseThrow(() -> new ResourceNotfound("Khong ton tai vi tri cong viec co id: " + id));
+        viTriCongViecRepository.softDeleteViTriCongViec(id);
     }
 
     @Override
     public Page<ViTriCongViecDTO> searchViTriCongViec(String maViTri, String tenViTri, String level, Pageable pageable) {
-        Page<ViTriCongViec> viTriCongViecPage = viTriCongViecRepository.searchViTriCongViec(maViTri, tenViTri,level,pageable);
+        Page<ViTriCongViec> viTriCongViecPage = viTriCongViecRepository.searchViTriCongViec(maViTri, tenViTri, level, pageable);
 
         List<ViTriCongViecDTO> viTriCongViecDTOS = viTriCongViecPage.getContent().stream()
-                .map((viTriCongViec) ->modelMapper.map(viTriCongViec,ViTriCongViecDTO.class))
+                .map((viTriCongViec) -> modelMapper.map(viTriCongViec, ViTriCongViecDTO.class))
                 .collect(Collectors.toList());
 
         return new PageImpl<>(viTriCongViecDTOS, pageable, viTriCongViecPage.getTotalElements());

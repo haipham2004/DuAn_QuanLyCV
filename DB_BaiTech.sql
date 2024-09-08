@@ -40,7 +40,7 @@ CREATE TABLE ViTriCongViec (
     vi_tri_id INT PRIMARY KEY IDENTITY(1,1),
     ma_vi_tri NVARCHAR(10) NOT NULL UNIQUE,
     ten_vi_tri NVARCHAR(100) NOT NULL,
-    level NVARCHAR(20) NOT NULL CHECK (level IN ('Inter', 'Fresher', 'Junior', 'Mid', 'Senior', 'Leader', 'Manager', 'Director')),
+    level NVARCHAR(20) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     deleted_at BIT DEFAULT 0
@@ -83,18 +83,19 @@ CREATE TABLE DotTuyenDung (
 -- Tạo bảng CV
 CREATE TABLE CV (
     cv_id INT PRIMARY KEY IDENTITY(1,1),
-    apply_datetime DATE NOT NULL,
-    full_name NVARCHAR(100) NOT NULL,
-    gender NVARCHAR(10) NOT NULL CHECK (gender IN ('Male', 'Female', 'Other')),
-    email NVARCHAR(100) NOT NULL UNIQUE,
-    tel NVARCHAR(15) NOT NULL,
-    city NVARCHAR(100) NOT NULL,
-    job_name NVARCHAR(100) NOT NULL,
+	maHoSo VARCHAR(20),
+    apply_datetime DATE  NULL,
+    full_name NVARCHAR(100)  NULL,
+    gender NVARCHAR(10)  NULL,
+    email NVARCHAR(100)  NULL UNIQUE,
+    tel NVARCHAR(15)  NULL,
+    city NVARCHAR(100)  NULL,
+    job_name NVARCHAR(100)  NULL,
     tong_nam_kinh_nghiem DECIMAL(5,2) NOT NULL,
     note NVARCHAR(MAX),
     link_cv NVARCHAR(255) NOT NULL,
-    nguon_tuyen_dung NVARCHAR(20) NOT NULL CHECK (nguon_tuyen_dung IN ('Fb', 'Giới thiệu', 'TopCV', 'Linkedin', 'Khác')),
-    trang_thai NVARCHAR(50) NOT NULL CHECK (trang_thai IN ('Chưa pvan', 'Pass pvan', 'Fail pvan', 'Đăng cân nhắc', 'Nghỉ việc', 'Bị thôi việc')),
+    nguon_tuyen_dung NVARCHAR(20) ,
+    trang_thai NVARCHAR(50)  NULL ,
     share BIT DEFAULT 0,
     hr_user_id INT,
     FOREIGN KEY (hr_user_id) REFERENCES NhanVien(nhan_vien_id),
@@ -162,7 +163,6 @@ INSERT INTO ViTriCongViec (ma_vi_tri, ten_vi_tri, level) VALUES
 ('VT011', N'Chuyên viên Dịch vụ Khách hàng', 'Senior'),
 ('VT012', N'Giám đốc Tài chính', 'Director');
 
-
 -- Thêm dữ liệu mẫu vào bảng NhanVien
 INSERT INTO NhanVien (ma_nhan_vien, ten_nhan_vien, email, sdt, vi_tri_id, nhan_vien_quan_ly_id, ma_account, roles_id) VALUES 
 ('NV001', N'Phạm Ngọc Hải', 'a.nguyen@company.com', '0900000001', 1, 1, 'HaiPham1', 1), 
@@ -174,14 +174,42 @@ INSERT INTO NhanVien (ma_nhan_vien, ten_nhan_vien, email, sdt, vi_tri_id, nhan_v
 ('NV007', N'Hoàng Văn Z', 'k.hoang@company.com', '0900000005', 2, 2, 'HaiPham3', 3);
 
 -- Thêm dữ liệu mẫu vào bảng DotTuyenDung
-INSERT INTO DotTuyenDung (ma_dot_tuyen_dung, ten_dot_tuyen_dung, noi_dung, deadline, user_id) VALUES 
-('DTD001', N'Đợt tuyển dụng tháng 1', N'Chi tiết tuyển dụng tháng 1', '2024-09-30', 1), 
-('DTD002', N'Đợt tuyển dụng tháng 2', N'Chi tiết tuyển dụng tháng 2', '2024-10-15', 2);
+INSERT INTO DotTuyenDung (ma_dot_tuyen_dung, ten_dot_tuyen_dung, noi_dung, deadline, user_id) 
+VALUES 
+('DTD001', N'Đợt tuyển dụng tháng 1', N'Chi tiết tuyển dụng tháng 1', GETDATE(), 1), 
+('DTD002', N'Đợt tuyển dụng tháng 2', N'Chi tiết tuyển dụng tháng 2', GETDATE(), 2), 
+('DTD003', N'Đợt tuyển dụng tháng 3', N'Chi tiết tuyển dụng tháng 3',GETDATE(), 3), 
+('DTD004', N'Đợt tuyển dụng tháng 4', N'Chi tiết tuyển dụng tháng 4', GETDATE(), 4), 
+('DTD005', N'Đợt tuyển dụng tháng 5', N'Chi tiết tuyển dụng tháng 5', GETDATE(), 5), 
+('DTD006', N'Đợt tuyển dụng tháng 6', N'Chi tiết tuyển dụng tháng 6', GETDATE(), 6), 
+('DTD007', N'Đợt tuyển dụng tháng 7', N'Chi tiết tuyển dụng tháng 7', GETDATE(), 1), 
+('DTD008', N'Đợt tuyển dụng tháng 8', N'Chi tiết tuyển dụng tháng 8', GETDATE(), 2), 
+('DTD009', N'Đợt tuyển dụng tháng 9', N'Chi tiết tuyển dụng tháng 9', GETDATE(), 3), 
+('DTD010', N'Đợt tuyển dụng tháng 10', N'Chi tiết tuyển dụng tháng 10', GETDATE(), 4), 
+('DTD011', N'Đợt tuyển dụng tháng 11', N'Chi tiết tuyển dụng tháng 11', GETDATE(), 5), 
+('DTD012', N'Đợt tuyển dụng tháng 12', N'Chi tiết tuyển dụng tháng 12', GETDATE(), 6);
+
 
 -- Thêm dữ liệu mẫu vào bảng CV
-INSERT INTO CV (apply_datetime, full_name, gender, email, tel, city, job_name, tong_nam_kinh_nghiem, note, link_cv, nguon_tuyen_dung, trang_thai, share, hr_user_id) VALUES 
-('2024-09-01', N'Nguyễn Văn A', 'Male', 'a.nguyen@gmail.com', '0900000001', 'Hà Nội', N'Nhân viên Kỹ thuật', 2.5, N'Chưa pvan', 'https://cvlink.com/a', 'Fb', 'Chưa pvan', 0, 1),
-('2024-09-02', N'Nguyễn Thị B', 'Female', 'b.nguyen@gmail.com', '0900000002', 'Hà Nội', N'Trưởng phòng Nhân sự', 4.0, N'Pass pvan', 'https://cvlink.com/b', 'Linkedin', 'Pass pvan', 1, 2);
+INSERT INTO CV (maHoSo, apply_datetime, full_name, gender, email, tel, city, job_name, tong_nam_kinh_nghiem, note, link_cv, nguon_tuyen_dung, trang_thai, share, hr_user_id)
+VALUES
+('HS001', '2024-09-01', 'Nguyễn Văn A', 'Nam', 'nguyenvana@example.com', '0912345678', 'Hà Nội', 'Lập trình viên', 3.5, 'Có kinh nghiệm về Java', 'http://example.com/cv_nguyenvana', 'LinkedIn', 'Đậu Phỏng Vấn', 1, 1),
+('HS002', '2024-09-02', 'Trần Thị B', 'Nữ', 'tranthib@example.com', '0987654321', 'Hồ Chí Minh', 'Kiểm thử', 2.0, 'Tốt nghiệp ngành CNTT', 'http://example.com/cv_tranthib', 'Referral', 'Chưa Phỏng', 0, 2),
+('HS003', '2024-09-03', 'Lê Văn C', 'Nam', 'levanc@example.com', '0901234567', 'Đà Nẵng', 'Quản lý dự án', 7.0, 'Quản lý dự án phần mềm', 'http://example.com/cv_levanc', 'Facebook', 'Rớt Phỏng Vấn', 1, 3),
+('HS004', '2024-09-04', 'Phạm Thị D', 'Nữ', 'phamthid@example.com', '0934567890', 'Cần Thơ', 'BA', 5.0, 'Kinh nghiệm BA 5 năm', 'http://example.com/cv_phamthid', 'TopCV', 'Cân Nhắc Sau', 0, 4),
+('HS005', '2024-09-05', 'Đỗ Văn E', 'Nam', 'dovane@example.com', '0923456789', 'Hải Phòng', 'Nhà thiết kế', 4.0, 'Thiết kế đồ họa', 'http://example.com/cv_dovane', 'LinkedIn', 'Nghỉ Việc', 0, 5),
+('HS006', '2024-09-06', 'Hoàng Thị F', 'Nữ', 'hoangthif@example.com', '0945678912', 'Quảng Ninh', 'Marketing', 1.5, 'Kinh nghiệm marketing', 'http://example.com/cv_hoangthif', 'Referral', 'Bị Thôi Việc', 1, 6),
+('HS007', '2024-09-07', 'Võ Văn G', 'Nam', 'vovang@example.com', '0956789123', 'Huế', 'QA', 6.0, 'Kiểm thử phần mềm', 'http://example.com/cv_vovang', 'LinkedIn', 'Đậu Phỏng Vấn', 1, 7),
+('HS008', '2024-09-08', 'Vũ Thị H', 'Nữ', 'vuthih@example.com', '0967891234', 'Đà Nẵng', 'HR', 4.5, 'Quản lý nhân sự', 'http://example.com/cv_vuthih', 'TopCV', 'Rớt Phỏng Vấn', 0, 1),
+('HS009', '2024-09-09', 'Nguyễn Văn I', 'Nam', 'nguyenvani@example.com', '0978912345', 'Hà Nội', 'Lập trình viên', 2.0, 'Lập trình C#', 'http://example.com/cv_nguyenvani', 'LinkedIn', 'Cân Nhắc Sau', 1, 2),
+('HS010', '2024-09-10', 'Trần Thị J', 'Nữ', 'tranthij@example.com', '0989123456', 'TP HCM', 'Kiểm thử', 3.0, 'Kiểm thử tự động', 'http://example.com/cv_tranthij', 'Referral', 'Chưa Phỏng', 0, 3),
+('HS011', '2024-09-11', 'Lê Văn K', 'Nam', 'levank@example.com', '0991234567', 'Huế', 'BA', 2.5, 'Tư vấn nghiệp vụ', 'http://example.com/cv_levank', 'Facebook', 'Đậu Phỏng Vấn', 1, 4),
+('HS012', '2024-09-12', 'Phạm Thị L', 'Nữ', 'phamthil@example.com', '0909876543', 'Hà Nội', 'Marketing', 3.0, 'Digital marketing', 'http://example.com/cv_phamthil', 'LinkedIn', 'Nghỉ Việc', 1, 5);
+
+
+
+
+
 
 -- Thêm dữ liệu mẫu vào bảng Activity
 INSERT INTO Activity (activity_type, activity_note, user_id, share, create_date) VALUES 
@@ -190,4 +218,8 @@ INSERT INTO Activity (activity_type, activity_note, user_id, share, create_date)
 
 
 SELECT*FROM NhanVien
+SELECT*FROM PhongBan
+SELECT*FROM ViTriCongViec
+SELECT*FROM DotTuyenDung
+SELECT*FROM CV
 UPDATE NhanVien set deleted_at=0

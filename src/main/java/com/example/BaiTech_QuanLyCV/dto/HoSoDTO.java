@@ -24,6 +24,8 @@ public class HoSoDTO {
 
     private Integer cvId;
 
+    private String maHoSo;
+
     private Date applyDatetime;
 
     private String fullName;
@@ -50,7 +52,7 @@ public class HoSoDTO {
 
     private Boolean share = false;
 
-    private Integer idNhanVien;
+    private Integer nhanVienIdNhanVien;
 
     private String tenNhanVien;
 }
