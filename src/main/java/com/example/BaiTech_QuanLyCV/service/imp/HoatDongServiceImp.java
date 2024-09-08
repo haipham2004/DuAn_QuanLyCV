@@ -2,14 +2,19 @@ package com.example.BaiTech_QuanLyCV.service.imp;
 
 import com.example.BaiTech_QuanLyCV.dto.HoSoDTO;
 import com.example.BaiTech_QuanLyCV.dto.HoatDongDTO;
+import com.example.BaiTech_QuanLyCV.dto.PhongBanDTO;
 import com.example.BaiTech_QuanLyCV.entity.HoatDong;
 import com.example.BaiTech_QuanLyCV.entity.NhanVien;
+import com.example.BaiTech_QuanLyCV.entity.PhongBan;
 import com.example.BaiTech_QuanLyCV.exception.ResourceNotfound;
 import com.example.BaiTech_QuanLyCV.repository.HoatDongRepository;
 import com.example.BaiTech_QuanLyCV.repository.NhanVienRepository;
 import com.example.BaiTech_QuanLyCV.service.HoatDongService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -67,6 +72,18 @@ public class HoatDongServiceImp implements HoatDongService {
 
     @Override
     public void delete(Integer id) {
+HoatDong hoatDong=hoatDongRepository.findById(id).orElseThrow(() -> new ResourceNotfound("Khong ton tai hoa dong có id: "+id));
+hoatDongRepository.softDeleteHoatDong(id);
+    }
 
+    @Override
+    public Page<HoatDongDTO> searchHoatDong(String activityType, String tenNhanVien, Pageable pageable) {
+        Page<HoatDong> hoatDongPage = hoatDongRepository.searchHoatDong(activityType, tenNhanVien,pageable);
+
+        List<HoatDongDTO> hoatDongDTOS = hoatDongPage.getContent().stream()
+                .map((hoatDong) ->modelMapper.map(hoatDong,HoatDongDTO.class))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(hoatDongDTOS, pageable, hoatDongPage.getTotalElements());
     }
 }

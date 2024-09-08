@@ -36,6 +36,9 @@ public class HoSo {
     @Column(name="cv_id")
     private Integer cvId;
 
+    @Column(name="maHoSo")
+    private String maHoSo;
+
     @Column(name = "apply_datetime", nullable = false)
     private Date applyDatetime;
 

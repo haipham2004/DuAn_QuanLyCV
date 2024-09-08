@@ -18,6 +18,7 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -47,7 +48,7 @@ public class DotTuyenDung {
     private String noiDung;
 
     @Column(nullable = false)
-    private LocalDate deadline;
+    private Date deadline;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -61,7 +62,7 @@ public class DotTuyenDung {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Column(name = "deleted_at", columnDefinition = "BIT(1) DEFAULT 1")
+    @Column(name = "deleted_at", columnDefinition = "BIT(0) DEFAULT 0")
     private Boolean deletedAt = true;
 
 }
