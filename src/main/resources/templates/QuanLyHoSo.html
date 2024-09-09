@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +13,9 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <!-- Include Bootstrap Icons for the home icon -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         .container {
             margin-top: 20px;
@@ -39,7 +42,12 @@
 <div class="container">
     <h1 class="mb-4">Quản Lý CV</h1>
 
-    <!-- Search Form -->
+
+    <a href="#" th:href="@{/loginPage}" class="btn btn-outline-primary mb-3">
+        <i class="bi bi-house-door"></i> Quay lại trang chủ
+    </a>
+
+
     <div class="mb-4">
         <div class="form-group col-md-4 mr-5">
             <input type="text" class="form-control" id="search"
@@ -47,7 +55,7 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-primary mb-3" id="addCvButton" data-bs-toggle="modal" data-bs-target="#cvAddModal">
+    <button type="button" class="btn btn-primary mb-3" sec:authorize="hasRole('ROLE_ADMIN')" id="addCvButton" data-bs-toggle="modal" data-bs-target="#cvAddModal">
         Thêm CV
     </button>
 
@@ -56,13 +64,8 @@
         <tr>
             <th>Ngày Nộp</th>
             <th>Họ Tên</th>
-<!--            <th>Giới Tính</th>-->
-<!--            <th>Email</th>-->
             <th>SĐT</th>
-<!--            <th>Thành Phố</th>-->
             <th>Vị Trí</th>
-<!--            <th>Kinh Nghiệm</th>-->
-<!--            <th>Ghi Chú</th>-->
             <th>Link CV</th>
             <th>Nguồn Tuyển Dụng</th>
             <th>Trạng Thái</th>
@@ -71,13 +74,13 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Rows will be added here by jQuery -->
+
         </tbody>
     </table>
 
 
 
-    <!-- Modal for adding CV -->
+
     <div class="modal fade" id="cvAddModal" tabindex="-1" aria-labelledby="cvModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -89,15 +92,15 @@
                     <form id="cvAddForm">
                         <div class="mb-3">
                             <label for="addApplyDate" class="form-label">Ngày Nộp</label>
-                            <input type="date" class="form-control" id="addApplyDate" required>
+                            <input type="date" class="form-control" id="addApplyDate" >
                         </div>
                         <div class="mb-3">
                             <label for="addFullName" class="form-label">Họ Tên</label>
-                            <input type="text" class="form-control" id="addFullName" required>
+                            <input type="text" class="form-control" id="addFullName" >
                         </div>
                         <div class="mb-3">
                             <label for="addGender" class="form-label">Giới Tính</label>
-                            <select class="form-select" id="addGender" required>
+                            <select class="form-select" id="addGender" >
                                 <option value="Nam">Nam</option>
                                 <option value="Nữ">Nữ</option>
                                 <option value="Khác">Khác</option>
@@ -105,39 +108,39 @@
                         </div>
                         <div class="mb-3">
                             <label for="addEmail" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="addEmail" required>
+                            <input type="text" class="form-control" id="addEmail" >
                         </div>
                         <div class="mb-3">
                             <label for="addPhone" class="form-label">SĐT</label>
-                            <input type="text" class="form-control" id="addPhone" required>
+                            <input type="text" class="form-control" id="addPhone" >
                         </div>
                         <div class="mb-3">
                             <label for="addCity" class="form-label">Thành Phố</label>
-                            <input type="text" class="form-control" id="addCity" required>
+                            <input type="text" class="form-control" id="addCity" >
                         </div>
                         <div class="mb-3">
                             <label for="addJobName" class="form-label">Vị Trí</label>
-                            <input type="text" class="form-control" id="addJobName" required>
+                            <input type="text" class="form-control" id="addJobName" >
                         </div>
                         <div class="mb-3">
                             <label for="addExperience" class="form-label">Kinh Nghiệm</label>
-                            <input type="text" class="form-control" id="addExperience" required>
+                            <input type="text" class="form-control" id="addExperience" >
                         </div>
                         <div class="mb-3">
                             <label for="addNote" class="form-label">Ghi Chú</label>
-                            <textarea class="form-control" id="addNote" rows="3" required></textarea>
+                            <textarea class="form-control" id="addNote" rows="3" ></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="addCvLink" class="form-label">Link CV</label>
-                            <input type="url" class="form-control" id="addCvLink" required>
+                            <input type="url" class="form-control" id="addCvLink" >
                         </div>
                         <div class="mb-3">
                             <label for="addSource" class="form-label">Nguồn Tuyển Dụng</label>
-                            <input type="text" class="form-control" id="addSource" required>
+                            <input type="text" class="form-control" id="addSource" >
                         </div>
                         <div class="mb-3">
                             <label for="addStatus" class="form-label">Trạng Thái</label>
-                            <select class="form-select" id="addStatus" required>
+                            <select class="form-select" id="addStatus" >
                                 <option value="Not Interviewed">Chưa Phỏng Vấn</option>
                                 <option value="Passed Interview">Đậu Phỏng Vấn</option>
                                 <option value="Failed Interview">Rớt Phỏng Vấn</option>
@@ -155,6 +158,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary">Thêm hồ sơ</button>
+
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -165,7 +169,7 @@
     </div>
 
 
-    <!-- Modal for Edit CV -->
+
     <div class="modal fade" id="cvModal" tabindex="-1" aria-labelledby="cvModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -178,20 +182,20 @@
                         <input type="hidden" id="cvId"/>
                         <div class="mb-3">
                             <label for="editMaHoSo" class="form-label">Ma_HoSo</label>
-                            <input type="text" class="form-control" id="editMaHoSo" required>
+                            <input type="text" class="form-control" id="editMaHoSo" >
                         </div>
 
                         <div class="mb-3">
                             <label for="applyDate" class="form-label">Ngày Nộp</label>
-                            <input type="date" class="form-control" id="applyDate" required>
+                            <input type="date" class="form-control" id="applyDate" >
                         </div>
                         <div class="mb-3">
                             <label for="fullName" class="form-label">Họ Tên</label>
-                            <input type="text" class="form-control" id="fullName" required>
+                            <input type="text" class="form-control" id="fullName" >
                         </div>
                         <div class="mb-3">
                             <label for="gender" class="form-label">Giới Tính</label>
-                            <select class="form-select" id="gender" required>
+                            <select class="form-select" id="gender" >
                                 <option value="Nam">Nam</option>
                                 <option value="Nữ">Nữ</option>
                                 <option value="Other">Khác</option>
@@ -199,39 +203,39 @@
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" required>
+                            <input type="text" class="form-control" id="email" >
                         </div>
                         <div class="mb-3">
                             <label for="phone" class="form-label">SĐT</label>
-                            <input type="text" class="form-control" id="phone" required>
+                            <input type="text" class="form-control" id="phone" >
                         </div>
                         <div class="mb-3">
                             <label for="city" class="form-label">Thành Phố</label>
-                            <input type="text" class="form-control" id="city" required>
+                            <input type="text" class="form-control" id="city" >
                         </div>
                         <div class="mb-3">
                             <label for="jobName" class="form-label">Vị Trí</label>
-                            <input type="text" class="form-control" id="jobName" required>
+                            <input type="text" class="form-control" id="jobName" >
                         </div>
                         <div class="mb-3">
                             <label for="experience" class="form-label">Kinh Nghiệm</label>
-                            <input type="text" class="form-control" id="experience" required>
+                            <input type="text" class="form-control" id="experience" >
                         </div>
                         <div class="mb-3">
                             <label for="note" class="form-label">Ghi Chú</label>
-                            <textarea class="form-control" id="note" rows="3" required></textarea>
+                            <textarea class="form-control" id="note" rows="3" ></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="cvLink" class="form-label">Link CV</label>
-                            <input type="url" class="form-control" id="cvLink" required>
+                            <input type="url" class="form-control" id="cvLink" >
                         </div>
                         <div class="mb-3">
                             <label for="source" class="form-label">Nguồn Tuyển Dụng</label>
-                            <input type="text" class="form-control" id="source" required>
+                            <input type="text" class="form-control" id="source" >
                         </div>
                         <div class="mb-3">
                             <label for="status" class="form-label">Trạng Thái</label>
-                            <select class="form-select" id="status" required>
+                            <select class="form-select" id="status" >
                                 <option value="Chưa Phỏng Vấn">Chưa Phỏng Vấn</option>
                                 <option value="Đậu Phỏng Vấn">Đậu Phỏng Vấn</option>
                                 <option value="Rớt Phỏng Vấn" >Rớt Phỏng Vấn</option>
@@ -261,21 +265,21 @@
 
     <nav aria-label="Page navigation">
         <ul class="pagination" id="pagination">
-            <!-- Pagination links will be added here -->
+
         </ul>
     </nav>
 
 </div>
 
 <script>
-    // Thêm
+
     $(document).on('click', '#addCvButton', function() {
         loadNhanVienQuanLys(); // Hàm để load danh sách HR từ API nếu cần
         var addModal = new bootstrap.Modal(document.getElementById('cvAddModal'));
         addModal.show();
     });
 
-    // Hàm tạo mã ngẫu nhiên
+
     function generateRandomCode(length) {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let result = '';
@@ -286,9 +290,76 @@
         return result;
     }
 
-    // Xử lý submit form
+
     $('#cvAddForm').on('submit', function (e) {
         e.preventDefault();
+
+
+        var applyDatetime = $('#addApplyDate').val();
+        var fullName = $('#addFullName').val();
+        var gender = $('#addGender').val();
+        var email = $('#addEmail').val();
+        var tel = $('#addPhone').val();
+        var city = $('#addCity').val();
+        var jobName = $('#addJobName').val();
+        var tongNamKinhNghiem = $('#addExperience').val();
+        var note = $('#addNote').val();
+        var linkCv = $('#addCvLink').val();
+        var nguonTuyenDung = $('#addSource').val();
+        var trangThai = $('#addStatus').val();
+        var nhanVienIdNhanVien = $('#addCvHRUser').val();
+
+
+        if (!applyDatetime) {
+            Swal.fire('Lỗi', 'Vui lòng chọn ngày nộp CV.', 'error');
+            return;
+        }
+        if (!fullName || fullName.trim() === "") {
+            Swal.fire('Lỗi', 'Vui lòng nhập họ tên đầy đủ.', 'error');
+            return;
+        }
+        if (!gender) {
+            Swal.fire('Lỗi', 'Vui lòng chọn giới tính.', 'error');
+            return;
+        }
+        if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+            Swal.fire('Lỗi', 'Vui lòng nhập email hợp lệ.', 'error');
+            return;
+        }
+        if (!tel || !tel.match(/^\d{10}$/)) {
+            Swal.fire('Lỗi', 'Vui lòng nhập số điện thoại hợp lệ.', 'error');
+            return;
+        }
+        if (!city || city.trim() === "") {
+            Swal.fire('Lỗi', 'Vui lòng nhập thành phố.', 'error');
+            return;
+        }
+        if (!jobName || jobName.trim() === "") {
+            Swal.fire('Lỗi', 'Vui lòng nhập tên công việc.', 'error');
+            return;
+        }
+        if (!tongNamKinhNghiem || isNaN(tongNamKinhNghiem) || tongNamKinhNghiem < 0) {
+            Swal.fire('Lỗi', 'Vui lòng nhập số năm kinh nghiệm hợp lệ.', 'error');
+            return;
+        }
+
+        if (!linkCv) {
+            Swal.fire('Lỗi', 'Vui lòng nhập đường dẫn CV hợp lệ.', 'error');
+            return;
+        }
+        if (!nguonTuyenDung || nguonTuyenDung.trim() === "") {
+            Swal.fire('Lỗi', 'Vui lòng nhập nguồn tuyển dụng.', 'error');
+            return;
+        }
+        if (!trangThai) {
+            Swal.fire('Lỗi', 'Vui lòng chọn trạng thái CV.', 'error');
+            return;
+        }
+
+        if (!nhanVienIdNhanVien) {
+            Swal.fire('Lỗi', 'Vui lòng chọn HR.', 'error');
+            return;
+        }
 
         // Tạo mã CV
         var randomCode = generateRandomCode(5);
@@ -312,7 +383,7 @@
         };
 
         $.ajax({
-            url: 'http://localhost:8080/ho-so', // Endpoint phù hợp với API của bạn
+            url: 'http://localhost:8080/ho-so',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(formData),
@@ -322,7 +393,7 @@
                     'Dữ liệu CV đã được thêm thành công.',
                     'success'
                 );
-                fetchDataAndRenderTable(); // Cập nhật lại bảng CV
+                fetchDataAndRenderTable();
             },
             error: function(xhr, status, error) {
                 var errorMessage = xhr.responseJSON ? xhr.responseJSON.message : xhr.responseText;
@@ -338,7 +409,7 @@
 
 
 
-    // Chi tiết CV
+
     $(document).on('click', '.edit-button', function() {
         var cvId = $(this).data('id');
         $.ajax({
@@ -374,9 +445,83 @@
         });
     });
 
-    // Xử lý submit form cập nhật CV
+
     $('#cvForm').on('submit', function (e) {
         e.preventDefault();
+
+
+        var cvId = $('#cvId').val();
+        var maHoSo = $('#editMaHoSo').val();
+        var applyDatetime = $('#applyDate').val();
+        var fullName = $('#fullName').val();
+        var gender = $('#gender').val();
+        var email = $('#email').val();
+        var tel = $('#phone').val();
+        var city = $('#city').val();
+        var jobName = $('#jobName').val();
+        var tongNamKinhNghiem = $('#experience').val();
+        var note = $('#note').val();
+        var linkCv = $('#cvLink').val();
+        var nguonTuyenDung = $('#source').val();
+        var trangThai = $('#status').val();
+        var nhanVienIdNhanVien = $('#cvHRUser').val();
+
+
+        if (!cvId) {
+            Swal.fire('Lỗi', 'Thiếu ID CV.', 'error');
+            return;
+        }
+
+        if (!applyDatetime) {
+            Swal.fire('Lỗi', 'Vui lòng chọn ngày nộp CV.', 'error');
+            return;
+        }
+        if (!fullName || fullName.trim() === "") {
+            Swal.fire('Lỗi', 'Vui lòng nhập họ tên đầy đủ.', 'error');
+            return;
+        }
+        if (!gender) {
+            Swal.fire('Lỗi', 'Vui lòng chọn giới tính.', 'error');
+            return;
+        }
+        if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+            Swal.fire('Lỗi', 'Vui lòng nhập email hợp lệ.', 'error');
+            return;
+        }
+        if (!tel || !tel.match(/^\d{10}$/)) {
+            Swal.fire('Lỗi', 'Vui lòng nhập số điện thoại hợp lệ.', 'error');
+            return;
+        }
+        if (!city || city.trim() === "") {
+            Swal.fire('Lỗi', 'Vui lòng nhập thành phố.', 'error');
+            return;
+        }
+        if (!jobName || jobName.trim() === "") {
+            Swal.fire('Lỗi', 'Vui lòng nhập tên công việc.', 'error');
+            return;
+        }
+        if (!tongNamKinhNghiem || isNaN(tongNamKinhNghiem) || tongNamKinhNghiem < 0) {
+            Swal.fire('Lỗi', 'Vui lòng nhập số năm kinh nghiệm hợp lệ.', 'error');
+            return;
+        }
+
+        if (!linkCv) {
+            Swal.fire('Lỗi', 'Vui lòng nhập đường dẫn CV hợp lệ.', 'error');
+            return;
+        }
+        if (!nguonTuyenDung || nguonTuyenDung.trim() === "") {
+            Swal.fire('Lỗi', 'Vui lòng nhập nguồn tuyển dụng.', 'error');
+            return;
+        }
+        if (!trangThai) {
+            Swal.fire('Lỗi', 'Vui lòng chọn trạng thái CV.', 'error');
+            return;
+        }
+
+        if (!nhanVienIdNhanVien) {
+            Swal.fire('Lỗi', 'Vui lòng chọn HR.', 'error');
+            return;
+        }
 
         var formData = {
             cvId: $('#cvId').val(),
@@ -393,7 +538,7 @@
             linkCv: $('#cvLink').val(),
             nguonTuyenDung: $('#source').val(),
             trangThai: $('#status').val(),
-            nhanVienIdNhanVien: $('#cvHRUser').val() // Assuming you are storing HR user ID
+            nhanVienIdNhanVien: $('#cvHRUser').val()
         };
 
 
@@ -408,10 +553,8 @@
                     'CV đã được cập nhật thành công.',
                     'success'
                 );
-                fetchDataAndRenderTable(); // Cập nhật lại danh sách CV
-                // Ẩn modal sau khi cập nhật thành công
-                // var editModal = bootstrap.Modal.getInstance(document.getElementById('cvModal'));
-                // editModal.hide();
+                fetchDataAndRenderTable();
+
             },
             error: function(xhr, status, error) {
                 var errorMessage = xhr.responseJSON ? xhr.responseJSON.message : xhr.responseText;
@@ -473,14 +616,14 @@
     }
 
 
-    //Delete
+
     $(document).ready(function () {
-        // Đăng ký sự kiện click cho các nút xóa
+
         $(document).on('click', '.delete-button', function () {
-            // Lấy ID của phần tử cần xóa
+
             const id = $(this).data('id');
 
-            // Hiển thị hộp thoại xác nhận với SweetAlert2
+
             Swal.fire({
                 title: 'Bạn có chắc chắn?',
                 text: "Bạn không thể phục hồi dữ liệu sau khi xóa!",
@@ -492,22 +635,22 @@
                 cancelButtonText: 'Hủy'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Thực hiện cuộc gọi DELETE tới API
+
                     $.ajax({
                         url: `http://localhost:8080/ho-so/${id}`,
                         type: 'DELETE',
                         success: function (result) {
-                            // Hiển thị thông báo thành công
+
                             Swal.fire(
                                 'Đã xóa!',
                                 'Dữ liệu đã được xóa thành công.',
                                 'success'
                             );
-                            // Cập nhật bảng hoặc thực hiện các hành động sau khi xóa thành công
-                            fetchDataAndRenderTable(); // Ví dụ: gọi lại hàm để làm mới bảng dữ liệu
+
+                            fetchDataAndRenderTable();
                         },
                         error: function (xhr, status, error) {
-                            // Hiển thị thông báo lỗi
+
                             Swal.fire(
                                 'Lỗi!',
                                 'Có lỗi xảy ra khi xóa dữ liệu: ' + xhr.responseText,
@@ -522,12 +665,12 @@
 
 
 
-    // Biến toàn cục để lưu trữ các tham số tìm kiếm
+
     let currentSearchMa = null;
     let currentSearchName = null;
 
 
-    // Hàm để lấy dữ liệu và render bảng
+
     function fetchDataAndRenderTable(page = 0, size = 5) {
         let apiURL = `/ho-so/hien-thi?page=${page}&size=${size}`;
 
@@ -550,11 +693,11 @@
     function searchInvoices(query) {
         query = query.trim();
 
-        if (query.startsWith('PB')) { // Tìm kiếm mã phòng ban
+        if (query.startsWith('PB')) {
             currentSearchMa = query;
             currentSearchName = null;
         }
-        else { // Tìm kiếm tên phòng ban
+        else {
             currentSearchName = query;
             currentSearchMa = null;
 
@@ -564,18 +707,18 @@
     }
 
 
-    // Xử lý sự thay đổi của ô tìm kiếm
+
     document.getElementById('search').addEventListener('input', function () {
         const searchValue = this.value;
         searchInvoices(searchValue);
     });
 
-    // Hàm để render bảng dữ liệu
+
     function renderTable(data, page, size) {
         const tableBody = document.querySelector('#cvTable tbody');
         const pagination = document.querySelector('#pagination');
 
-        tableBody.innerHTML = ''; // Xóa các hàng cũ
+        tableBody.innerHTML = '';
 
         data.content.forEach(CV => {
             const row = `<tr>
@@ -589,16 +732,13 @@
                 <td>${CV.tenNhanVien}</td>
                 <td>
 
-
-                     <button type="button" class="btn btn-warning btn-sm edit-button"
+                    <button type="button" class="btn btn-warning btn-sm edit-button"
                             data-bs-toggle="modal" data-bs-target="#cvModal"
-                            data-id="${CV.cvId}">
+                            data-id="${CV.cvId}" >
                         Sửa
                     </button>
 
-
-
-                    <button type="button" class="btn btn-danger btn-sm delete-button" data-id="${CV.cvId}">
+                    <button type="button" class="btn btn-danger btn-sm delete-button"  data-id="${CV.cvId}">
                         Xóa
                     </button>
                 </td>
@@ -606,7 +746,7 @@
             tableBody.insertAdjacentHTML('beforeend', row);
         });
 
-        // Render phân trang
+
         pagination.innerHTML = '';
         for (let i = 0; i < data.totalPages; i++) {
             const pageItem = `<li class="page-item ${i === page ? 'active' : ''}">
@@ -615,7 +755,7 @@
             pagination.insertAdjacentHTML('beforeend', pageItem);
         }
 
-        // Xử lý sự kiện phân trang
+
         document.querySelectorAll('.page-link').forEach(link => {
             link.addEventListener('click', function (event) {
                 event.preventDefault();

@@ -17,6 +17,7 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -35,6 +36,9 @@ public class HoatDong {
     @Column(name="activity_id")
     private Integer activityId;
 
+    @Column(name = "activity_ma")
+    private String activityMa;
+
     @Column(name = "activity_type", nullable = false, length = 20)
     private String activityType;
 
@@ -45,7 +49,7 @@ public class HoatDong {
     private Boolean share = false;
 
     @Column(name = "create_date", nullable = false)
-    private LocalDateTime createDate;
+    private Date createDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
