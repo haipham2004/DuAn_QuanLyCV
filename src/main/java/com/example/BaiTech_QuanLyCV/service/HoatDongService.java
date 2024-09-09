@@ -20,7 +20,5 @@ public interface HoatDongService {
 
     void delete(Integer id);
 
-    Page<HoatDongDTO> searchHoatDong(@Param("activityType") String activityType,
-                                  @Param("tenNhanVien") String tenNhanVien,
-                                  Pageable pageable);
+    Page<HoatDongDTO> searchHoatDong(String activityMa, String activityType, String tenNhanVien, Pageable pageable);
 }

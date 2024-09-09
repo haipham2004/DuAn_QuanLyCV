@@ -54,10 +54,11 @@ public class HoatDongRest {
 
     @GetMapping("hien-thi")
     public Page<HoatDongDTO> searchNhanVien(
+            @RequestParam(required = false, defaultValue = "") String activityMa,
             @RequestParam(required = false, defaultValue = "") String activityType,
             @RequestParam(required = false, defaultValue = "") String tenNhanVien,
             Pageable pageable) {
-        return hoatDongService.searchHoatDong(activityType, tenNhanVien, pageable);
+        return hoatDongService.searchHoatDong(activityMa, activityType, tenNhanVien, pageable);
     }
 
     @DeleteMapping("/{id}")

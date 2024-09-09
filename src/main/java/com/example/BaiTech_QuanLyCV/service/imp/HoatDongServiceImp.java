@@ -50,7 +50,7 @@ public class HoatDongServiceImp implements HoatDongService {
 
     @Override
     public HoatDongDTO save(HoatDongDTO hoatDongDTO) {
-        NhanVien nhanVien=nhanVienRepository.findById(hoatDongDTO.getIdNhanVien()).orElseThrow(() -> new ResourceNotfound("Khong ton tai nhan vien có id: "+hoatDongDTO.getIdNhanVien()));
+        NhanVien nhanVien=nhanVienRepository.findById(hoatDongDTO.getNhanVienIdNhanVien()).orElseThrow(() -> new ResourceNotfound("Khong ton tai nhan vien có id: "+hoatDongDTO.getNhanVienIdNhanVien()));
         HoatDong hoatDong=modelMapper.map(hoatDongDTO,HoatDong.class);
         hoatDong.setNhanVien(nhanVien);
         HoatDong hoatDongSave=hoatDongRepository.save(hoatDong);
@@ -59,13 +59,14 @@ public class HoatDongServiceImp implements HoatDongService {
 
     @Override
     public HoatDongDTO update(HoatDongDTO hoatDongDTO, Integer id) {
-        NhanVien nhanVien=nhanVienRepository.findById(hoatDongDTO.getIdNhanVien()).orElseThrow(() -> new ResourceNotfound("Khong ton tai nhan vien có id: "+hoatDongDTO.getIdNhanVien()));
+        NhanVien nhanVien=nhanVienRepository.findById(hoatDongDTO.getNhanVienIdNhanVien()).orElseThrow(() -> new ResourceNotfound("Khong ton tai nhan vien có id: "+hoatDongDTO.getNhanVienIdNhanVien()));
         HoatDong hoatDong=hoatDongRepository.findById(id).orElseThrow(() -> new ResourceNotfound("Khong ton tai hoa dong có id: "+id));
         hoatDong.setActivityType(hoatDongDTO.getActivityType());
         hoatDong.setActivityNote(hoatDongDTO.getActivityNote());
         hoatDong.setShare(hoatDongDTO.getShare());
         hoatDong.setCreateDate(hoatDongDTO.getCreateDate());
         hoatDong.setNhanVien(nhanVien);
+        hoatDong.setActivityMa(hoatDongDTO.getActivityMa());
         HoatDong hoatDongUpdate=hoatDongRepository.save(hoatDong);
         return modelMapper.map(hoatDongUpdate,HoatDongDTO.class);
     }
@@ -77,8 +78,8 @@ hoatDongRepository.softDeleteHoatDong(id);
     }
 
     @Override
-    public Page<HoatDongDTO> searchHoatDong(String activityType, String tenNhanVien, Pageable pageable) {
-        Page<HoatDong> hoatDongPage = hoatDongRepository.searchHoatDong(activityType, tenNhanVien,pageable);
+    public Page<HoatDongDTO> searchHoatDong(String activityMa,String activityType, String tenNhanVien, Pageable pageable) {
+        Page<HoatDong> hoatDongPage = hoatDongRepository.searchHoatDong(activityMa,activityType, tenNhanVien,pageable);
 
         List<HoatDongDTO> hoatDongDTOS = hoatDongPage.getContent().stream()
                 .map((hoatDong) ->modelMapper.map(hoatDong,HoatDongDTO.class))

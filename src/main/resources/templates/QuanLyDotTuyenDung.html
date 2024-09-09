@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +13,9 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <!-- Include Bootstrap Icons for the home icon -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         .container {
             margin-top: 20px;
@@ -38,6 +41,11 @@
 <body>
 <div class="container">
     <h1 class="mb-4">Quản Lý Đợt Tuyển Dụng</h1>
+
+    <a href="#" th:href="@{/loginPage}" class="btn btn-outline-primary mb-3">
+        <i class="bi bi-house-door"></i> Quay lại trang chủ
+    </a>
+
     <button type="button" class="btn btn-primary mb-3" id="addRecruiMentButton" data-bs-toggle="modal" data-bs-target="#recruitmentModal">
         Thêm Đợt Tuyển Dụng
     </button>
@@ -79,15 +87,15 @@
 
                         <div class="mb-3">
                             <label for="recruitmentName" class="form-label">Tên Đợt Tuyển Dụng</label>
-                            <input type="text" class="form-control" id="recruitmentName" required>
+                            <input type="text" class="form-control" id="recruitmentName" >
                         </div>
                         <div class="mb-3">
                             <label for="recruitmentContent" class="form-label">Nội Dung</label>
-                            <textarea class="form-control" id="recruitmentContent" rows="3" required></textarea>
+                            <textarea class="form-control" id="recruitmentContent" rows="3" ></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="recruitmentDeadline" class="form-label">Deadline Tuyển Dụng</label>
-                            <input type="date" class="form-control" id="recruitmentDeadline" required>
+                            <input type="date" class="form-control" id="recruitmentDeadline" >
                         </div>
 
                         <div class="mb-3">
@@ -128,15 +136,15 @@
                         </div>
                         <div class="mb-3">
                             <label for="editRecruitmentName" class="form-label">Tên Đợt Tuyển Dụng</label>
-                            <input type="text" class="form-control" id="editRecruitmentName" required>
+                            <input type="text" class="form-control" id="editRecruitmentName" >
                         </div>
                         <div class="mb-3">
                             <label for="editRecruitmentContent" class="form-label">Nội Dung</label>
-                            <textarea class="form-control" id="editRecruitmentContent" rows="3" required></textarea>
+                            <textarea class="form-control" id="editRecruitmentContent" rows="3" ></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="editRecruitmentDeadline" class="form-label">Deadline Tuyển Dụng</label>
-                            <input type="date" class="form-control" id="editRecruitmentDeadline" required>
+                            <input type="date" class="form-control" id="editRecruitmentDeadline" >
                         </div>
 
                         <div class="mb-3">
@@ -166,14 +174,14 @@
 
 <script>
 
-    //Thêm
+
     $(document).on('click', '#addRecruiMentButton', function() {
         loadNhanVienQuanLys();
         var addModal = new bootstrap.Modal(document.getElementById('recruitmentModal'));
         addModal.show();
     });
 
-    // Hàm tạo mã ngẫu nhiên
+
     function generateRandomCode(length) {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let result = '';
@@ -184,13 +192,37 @@
         return result;
     }
 
-    // Xử lý submit form
+
     $('#recruitmentForm').on('submit', function (e) {
         e.preventDefault();
 
-        // Tạo mã phòng ban
+
         var randomCode = generateRandomCode(5);
         var maDotTuyenDung = 'DTD' + randomCode;
+
+        // Lấy giá trị từ các trường trong form
+        var tenDotTuyenDung = $('#recruitmentName').val();
+        var noiDung = $('#recruitmentContent').val();
+        var deadline = $('#recruitmentDeadline').val();
+        var nhanVienId = $('#recruitmentUser').val();
+
+        // Validate các trường bắt buộc
+        if (!tenDotTuyenDung) {
+            Swal.fire('Lỗi', 'Vui lòng nhập tên đợt tuyển dụng.', 'error');
+            return;
+        }
+        if (!noiDung) {
+            Swal.fire('Lỗi', 'Vui lòng nhập nội dung đợt tuyển dụng.', 'error');
+            return;
+        }
+        if (!deadline) {
+            Swal.fire('Lỗi', 'Vui lòng chọn hạn nộp hồ sơ.', 'error');
+            return;
+        }
+        if (!nhanVienId) {
+            Swal.fire('Lỗi', 'Vui lòng chọn nhân viên phụ trách.', 'error');
+            return;
+        }
 
         var formData = {
             maDotTuyenDung: maDotTuyenDung,
@@ -227,7 +259,7 @@
 
 
 
-    // Khi nhấn vào nút sửa (edit-button)
+
     $(document).on('click', '.edit-button', function() {
         var dotTuyenDungId = $(this).data('id');
         $.ajax({
@@ -244,7 +276,7 @@
 
                 loadNhanVienQuanLy(data.nhanVienId)
 
-                // Hiển thị modal
+
                 var editModal = new bootstrap.Modal(document.getElementById('editRecruitmentModal'));
                 editModal.show();
             },
@@ -258,16 +290,50 @@
         });
     });
 
-    // Xử lý submit form sửa Đợt Tuyển Dụng
+
     $('#editRecruitmentForm').on('submit', function(e) {
         e.preventDefault();
 
+
+        var dotTuyenDungId = $('#editRecruitmentId').val();
+        var maDotTuyenDung = $('#editRecruitmentCode').val();
+        var tenDotTuyenDung = $('#editRecruitmentName').val();
+        var noiDung = $('#editRecruitmentContent').val();
+        var deadline = $('#editRecruitmentDeadline').val();
+        var nhanVienId = $('#editRecruitmentUser').val();
+
+        // Validate các trường bắt buộc
+        if (!dotTuyenDungId) {
+            Swal.fire('Lỗi', 'ID đợt tuyển dụng không hợp lệ.', 'error');
+            return;
+        }
+        if (!maDotTuyenDung) {
+            Swal.fire('Lỗi', 'Vui lòng nhập mã đợt tuyển dụng.', 'error');
+            return;
+        }
+        if (!tenDotTuyenDung) {
+            Swal.fire('Lỗi', 'Vui lòng nhập tên đợt tuyển dụng.', 'error');
+            return;
+        }
+        if (!noiDung) {
+            Swal.fire('Lỗi', 'Vui lòng nhập nội dung đợt tuyển dụng.', 'error');
+            return;
+        }
+        if (!deadline) {
+            Swal.fire('Lỗi', 'Vui lòng chọn hạn nộp hồ sơ.', 'error');
+            return;
+        }
+        if (!nhanVienId) {
+            Swal.fire('Lỗi', 'Vui lòng chọn nhân viên phụ trách.', 'error');
+            return;
+        }
+
         var formData = {
-            dotTuyenDungId: $('#editRecruitmentId').val(), // ID Đợt Tuyển Dụng
-            maDotTuyenDung: $('#editRecruitmentCode').val(), // Mã Đợt Tuyển Dụng
-            tenDotTuyenDung: $('#editRecruitmentName').val(), // Tên Đợt Tuyển Dụng
-            noiDung: $('#editRecruitmentContent').val(), // Nội Dung
-            deadline: $('#editRecruitmentDeadline').val(), // Deadline
+            dotTuyenDungId: $('#editRecruitmentId').val(),
+            maDotTuyenDung: $('#editRecruitmentCode').val(),
+            tenDotTuyenDung: $('#editRecruitmentName').val(),
+            noiDung: $('#editRecruitmentContent').val(),
+            deadline: $('#editRecruitmentDeadline').val(),
             nhanVienId: $('#editRecruitmentUser').val(),
         };
 
@@ -282,7 +348,7 @@
                     'Dữ liệu đã được cập nhật thành công.',
                     'success'
                 );
-                fetchDataAndRenderTable(); // Cập nhật lại bảng dữ liệu sau khi chỉnh sửa
+                fetchDataAndRenderTable();
                 var editModal = bootstrap.Modal.getInstance(document.getElementById('editRecruitmentModal'));
                 editModal.hide();
             },
@@ -322,7 +388,7 @@
         });
     }
 
-    // Hàm tải danh sách nhân viên quản lý và điền vào select box
+
     function loadNhanVienQuanLy(selectedId) {
         $.ajax({
             url: 'http://localhost:8080/nhan-vien/hien-thi2',
@@ -347,14 +413,13 @@
     }
 
 
-    //Delete
+
     $(document).ready(function () {
-        // Đăng ký sự kiện click cho các nút xóa
+
         $(document).on('click', '.delete-button', function () {
-            // Lấy ID của phần tử cần xóa
+
             const id = $(this).data('id');
 
-            // Hiển thị hộp thoại xác nhận với SweetAlert2
             Swal.fire({
                 title: 'Bạn có chắc chắn?',
                 text: "Bạn không thể phục hồi dữ liệu sau khi xóa!",
@@ -366,7 +431,7 @@
                 cancelButtonText: 'Hủy'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Thực hiện cuộc gọi DELETE tới API
+
                     $.ajax({
                         url: `http://localhost:8080/dot-tuyen-dung/${id}`,
                         type: 'DELETE',
@@ -377,8 +442,8 @@
                                 'Dữ liệu đã được xóa thành công.',
                                 'success'
                             );
-                            // Cập nhật bảng hoặc thực hiện các hành động sau khi xóa thành công
-                            fetchDataAndRenderTable(); // Ví dụ: gọi lại hàm để làm mới bảng dữ liệu
+
+                            fetchDataAndRenderTable();
                         },
                         error: function (xhr, status, error) {
                             // Hiển thị thông báo lỗi
@@ -396,14 +461,12 @@
 
 
 
-    // Biến toàn cục để lưu trữ các tham số tìm kiếm
     let currentSearchMa = null;
     let currentSearchName = null;
     let currentSearchNoiDung = null;
     let currentSearchTenNhanVien = null;
 
 
-    // Hàm để lấy dữ liệu và render bảng
     function fetchDataAndRenderTable(page = 0, size = 5) {
         let apiURL = `/dot-tuyen-dung/hien-thi?page=${page}&size=${size}`;
 
@@ -433,13 +496,13 @@
     function searchInvoices(query) {
         query = query.trim();
 
-        if (query.startsWith('DTD')) { // Tìm kiếm mã phòng ban
+        if (query.startsWith('DTD')) {
             currentSearchMa = query;
             currentSearchName = null;
             currentSearchNoiDung = null;
              currentSearchTenNhanVien = null;
         }
-        else { // Tìm kiếm tên phòng ban
+        else {
             currentSearchName = query;
             currentSearchMa = null;
 
@@ -449,13 +512,11 @@
     }
 
 
-    // Xử lý sự thay đổi của ô tìm kiếm
     document.getElementById('search').addEventListener('input', function () {
         const searchValue = this.value;
         searchInvoices(searchValue);
     });
 
-    // Hàm để render bảng dữ liệu
     function renderTable(data, page, size) {
         const tableBody = document.querySelector('#recruitmentTable tbody');
         const pagination = document.querySelector('#pagination');
@@ -489,7 +550,7 @@
             tableBody.insertAdjacentHTML('beforeend', row);
         });
 
-        // Render phân trang
+
         pagination.innerHTML = '';
         for (let i = 0; i < data.totalPages; i++) {
             const pageItem = `<li class="page-item ${i === page ? 'active' : ''}">
@@ -498,7 +559,6 @@
             pagination.insertAdjacentHTML('beforeend', pageItem);
         }
 
-        // Xử lý sự kiện phân trang
         document.querySelectorAll('.page-link').forEach(link => {
             link.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -508,7 +568,6 @@
         });
     }
 
-    // Khởi tạo khi trang web được tải
     fetchDataAndRenderTable();
 </script>
 </body>

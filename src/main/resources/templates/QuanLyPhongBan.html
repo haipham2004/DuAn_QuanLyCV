@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +14,9 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <!-- Include Bootstrap Icons for the home icon -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
         .container {
@@ -41,7 +44,11 @@
 <div class="container">
     <h1 class="mb-4">Quản Lý Phòng Ban</h1>
 
-    <!-- Search Form -->
+    <a href="#" th:href="@{/loginPage}" class="btn btn-outline-primary mb-3">
+        <i class="bi bi-house-door"></i> Quay lại trang chủ
+    </a>
+
+
     <div class="mb-4">
         <div class="form-group col-md-4 mr-5">
             <input type="text" class="form-control" id="search"
@@ -61,11 +68,11 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Rows will be added here by jQuery -->
+
         </tbody>
     </table>
 
-    <!-- Modal for adding/editing department -->
+
     <div class="modal fade" id="departmentModal" tabindex="-1" aria-labelledby="departmentModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -76,12 +83,12 @@
                 <div class="modal-body">
                     <form id="departmentForm">
                         <div class="mb-3">
-<!--                            <label for="departmentCode" class="form-label">Mã Phòng Ban</label>-->
-                            <input type="hidden" class="form-control" id="departmentCode" name="maPhongBan" required>
+
+                            <input type="hidden" class="form-control" id="departmentCode" name="maPhongBan" >
                         </div>
                         <div class="mb-3">
                             <label for="departmentName" class="form-label">Tên Phòng Ban</label>
-                            <input type="text" class="form-control" id="departmentName" name="tenPhongBan" required>
+                            <input type="text" class="form-control" id="departmentName" name="tenPhongBan" >
                         </div>
                         <button type="submit" class="btn btn-primary">Thêm Nhân Viên</button>
                     </form>
@@ -94,7 +101,7 @@
         </div>
     </div>
 
-    <!-- Modal for editing department -->
+
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -113,7 +120,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="editDepartmentName" class="form-label">Tên Phòng Ban</label>
-                            <input type="text" class="form-control" id="editDepartmentName" name="tenPhongBan" required>
+                            <input type="text" class="form-control" id="editDepartmentName" name="tenPhongBan" >
                         </div>
 
                         <button type="submit" class="btn btn-primary">Cập nhật</button>
@@ -126,7 +133,7 @@
 
     <nav aria-label="Page navigation">
         <ul class="pagination" id="pagination">
-            <!-- Pagination links will be added here -->
+
         </ul>
     </nav>
 
@@ -135,13 +142,13 @@
 <script>
 
 
-    //Thêm
+
     $(document).on('click', '#addEmployeeButton', function() {
         var addModal = new bootstrap.Modal(document.getElementById('departmentModal'));
         addModal.show();
     });
 
-    // Hàm tạo mã ngẫu nhiên
+
     function generateRandomCode(length) {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let result = '';
@@ -152,13 +159,22 @@
         return result;
     }
 
-    // Xử lý submit form
+
     $('#departmentForm').on('submit', function (e) {
         e.preventDefault();
 
-        // Tạo mã phòng ban
-        var randomCode = generateRandomCode(5); // Tạo 5 ký tự ngẫu nhiên
-        var maPhongBan = 'PB' + randomCode; // Kết hợp 'PB' với mã ngẫu nhiên
+
+        var randomCode = generateRandomCode(5);
+        var maPhongBan = 'PB' + randomCode;
+
+
+        var tenPhongBan = $('#departmentName').val();
+
+
+        if (!tenPhongBan) {
+            Swal.fire('Lỗi', 'Vui lòng nhập tên phòng ban.', 'error');
+            return;
+        }
 
         var formData = {
             maPhongBan: maPhongBan,
@@ -176,8 +192,8 @@
                     'Dữ liệu đã được thêm thành công.',
                     'success'
                 );
-                // $('#employeeModal').modal('hide'); // Ẩn modal sau khi thêm thành công
-                fetchDataAndRenderTable(); // Cập nhật lại bảng hoặc danh sách phòng ban
+
+                fetchDataAndRenderTable();
             },
             error: function(xhr, status, error) {
                 var errorMessage = xhr.responseJSON ? xhr.responseJSON.message : xhr.responseText;
@@ -219,9 +235,18 @@
     });
 
 
-    // Xử lý submit form
+
     $('#editForm').on('submit', function (e) {
         e.preventDefault();
+
+
+        var tenPhongBan = $('#editDepartmentName').val();
+
+
+        if (!tenPhongBan) {
+            Swal.fire('Lỗi', 'Vui lòng nhập tên phòng ban.', 'error');
+            return;
+        }
 
         var formData = {
             phongBanId: $('#editPhongBanId').val(), // Kiểm tra giá trị của phongBanId
@@ -240,8 +265,8 @@
                     'Dữ liệu đã được Update thành công.',
                     'success'
                 );
-                fetchDataAndRenderTable(); // Cập nhật bảng dữ liệu
-                // $('#editModal').modal('hide'); // Ẩn modal chỉnh sửa
+                fetchDataAndRenderTable();
+
             },
             error: function(xhr, status, error) {
                 var errorMessage = xhr.responseJSON ? xhr.responseJSON.message : xhr.responseText;
@@ -255,14 +280,11 @@
         });
     });
 
-    //Delete
     $(document).ready(function () {
-        // Đăng ký sự kiện click cho các nút xóa
         $(document).on('click', '.delete-button', function () {
-            // Lấy ID của phần tử cần xóa
             const id = $(this).data('id');
 
-            // Hiển thị hộp thoại xác nhận với SweetAlert2
+
             Swal.fire({
                 title: 'Bạn có chắc chắn?',
                 text: "Bạn không thể phục hồi dữ liệu sau khi xóa!",
@@ -274,7 +296,7 @@
                 cancelButtonText: 'Hủy'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Thực hiện cuộc gọi DELETE tới API
+
                     $.ajax({
                         url: `http://localhost:8080/phong-ban/${id}`,
                         type: 'DELETE',
@@ -285,11 +307,10 @@
                                 'Dữ liệu đã được xóa thành công.',
                                 'success'
                             );
-                            // Cập nhật bảng hoặc thực hiện các hành động sau khi xóa thành công
-                            fetchDataAndRenderTable(); // Ví dụ: gọi lại hàm để làm mới bảng dữ liệu
+
+                            fetchDataAndRenderTable();
                         },
                         error: function (xhr, status, error) {
-                            // Hiển thị thông báo lỗi
                             Swal.fire(
                                 'Lỗi!',
                                 'Có lỗi xảy ra khi xóa dữ liệu: ' + xhr.responseText,
@@ -304,12 +325,10 @@
 
 
 
-    // Biến toàn cục để lưu trữ các tham số tìm kiếm
     let currentSearchMa = null;
     let currentSearchName = null;
 
 
-    // Hàm để lấy dữ liệu và render bảng
     function fetchDataAndRenderTable(page = 0, size = 5) {
         let apiURL = `/phong-ban/hien-thi?page=${page}&size=${size}`;
 
@@ -332,11 +351,11 @@
     function searchInvoices(query) {
         query = query.trim();
 
-        if (query.startsWith('PB')) { // Tìm kiếm mã phòng ban
+        if (query.startsWith('PB')) {
             currentSearchMa = query;
             currentSearchName = null;
         }
-        else { // Tìm kiếm tên phòng ban
+        else {
             currentSearchName = query;
             currentSearchMa = null;
 
@@ -346,18 +365,16 @@
     }
 
 
-    // Xử lý sự thay đổi của ô tìm kiếm
     document.getElementById('search').addEventListener('input', function () {
         const searchValue = this.value;
         searchInvoices(searchValue);
     });
 
-    // Hàm để render bảng dữ liệu
     function renderTable(data, page, size) {
         const tableBody = document.querySelector('#departmentTable tbody');
         const pagination = document.querySelector('#pagination');
 
-        tableBody.innerHTML = ''; // Xóa các hàng cũ
+        tableBody.innerHTML = '';
 
         data.content.forEach(departments => {
             const row = `<tr>
@@ -382,7 +399,6 @@
             tableBody.insertAdjacentHTML('beforeend', row);
         });
 
-        // Render phân trang
         pagination.innerHTML = '';
         for (let i = 0; i < data.totalPages; i++) {
             const pageItem = `<li class="page-item ${i === page ? 'active' : ''}">
@@ -401,7 +417,6 @@
         });
     }
 
-    // Khởi tạo khi trang web được tải
     fetchDataAndRenderTable();
 
 </script>

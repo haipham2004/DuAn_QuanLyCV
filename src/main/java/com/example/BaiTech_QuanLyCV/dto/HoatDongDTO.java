@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -19,15 +20,17 @@ public class HoatDongDTO {
 
     private Integer activityId;
 
+    private String activityMa;
+
     private String activityType;
 
     private String activityNote;
 
     private Boolean share = false;
 
-    private LocalDateTime createDate;
+    private Date createDate;
 
-    private Integer idNhanVien;
+    private Integer nhanVienIdNhanVien;
 
     private String tenNhanVien;
 }
