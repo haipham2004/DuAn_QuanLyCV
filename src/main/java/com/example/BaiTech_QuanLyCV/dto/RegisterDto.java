@@ -4,22 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-@ToString
-public class AccountDTO {
+@NoArgsConstructor
+@AllArgsConstructor
+public class RegisterDto {
 
-    private String ma;
-
+    private String name;
     private String username;
-
     private String email;
-
-    private String passwords;
-
-    private boolean enableds;
+    private String password;
 }
