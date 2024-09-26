@@ -1,25 +1,19 @@
 package com.example.BaiTech_QuanLyCV.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
-public class AccountDTO {
+@Builder
+public class LoginDTO {
 
-    private String ma;
+    private String usernameOrEmail;
+    private String password;
 
-    private String username;
-
-    private String email;
-
-    private String passwords;
-
-    private boolean enableds;
 }

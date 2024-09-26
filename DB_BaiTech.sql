@@ -3,27 +3,39 @@ CREATE DATABASE BaiTech;
 GO
 USe BaiTech
 GO 
--- Tạo bảng Account
-CREATE TABLE Account (
-    ma VARCHAR(50) PRIMARY KEY,
-    passwords VARCHAR(200),
-    enableds BIT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ,
-    deleted_at BIT DEFAULT 0
-);
 
 -- Tạo bảng Roles
 CREATE TABLE Roles (
     role_id INT PRIMARY KEY IDENTITY(1,1),
-    ma VARCHAR(50) NOT NULL,
+    ma VARCHAR(50) NOT NULL ,  -- Đảm bảo cột ma là duy nhất
     authority VARCHAR(50) NOT NULL,
-    UNIQUE(ma, authority),
-    CONSTRAINT FK_RO_AC FOREIGN KEY (ma) REFERENCES Account(ma),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     deleted_at BIT DEFAULT 0
 );
+
+
+-- Tạo bảng Account
+CREATE TABLE Account (
+    ma VARCHAR(50) PRIMARY KEY,
+    username VARCHAR(50),
+    email VARCHAR(50),
+    passwords VARCHAR(200),
+    enableds BIT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    deleted_at BIT DEFAULT 0
+);
+
+-- Tạo bảng account_roles
+CREATE TABLE account_roles (
+    account_id VARCHAR(50),
+    role_id INT,
+    CONSTRAINT PK_account_roles PRIMARY KEY (account_id, role_id),
+    CONSTRAINT FK_account FOREIGN KEY (account_id) REFERENCES Account(ma),
+    CONSTRAINT FK_role FOREIGN KEY (role_id) REFERENCES Roles(role_id)
+);
+
 
 -- Tạo bảng PhongBan
 CREATE TABLE PhongBan (
@@ -120,18 +132,29 @@ CREATE TABLE Activity (
 );
 
 
-
--- Thêm dữ liệu mẫu vào bảng Account
-INSERT INTO Account (ma, passwords, enableds) VALUES
-('HaiPham1', '{bcrypt}$2a$12$6eF5x.vDFF5ZJ5PSto1RreCCckFIKRtWPhTXfxezkEHbAK7Vu2KaG', 1),
-('HaiPham2', '{bcrypt}$2a$12$4OD6G/0peAQniCtESBi8lOp3yDcjar1h68xS81GivPDEY6aAXr5JW', 1),
-('HaiPham3', '{bcrypt}$2a$12$Kz9lCK7tyqKfOSPvyQemX.V98UP0ZBHpBftucdLsvOn/kWEQ9k/v6', 1);
-
 -- Thêm dữ liệu mẫu vào bảng Roles
 INSERT INTO Roles (ma, authority) VALUES
 ('HaiPham1', 'ROLE_ADMIN'),
 ('HaiPham2', 'ROLE_MANAGER'),
 ('HaiPham3', 'ROLE_MEMBER');
+
+-- Thêm dữ liệu mẫu vào bảng Account
+INSERT INTO Account (ma, username, email, passwords, enableds) VALUES
+('HaiPham1', 'HaiPham1a', 'haipham1@example.com', '$2a$12$6eF5x.vDFF5ZJ5PSto1RreCCckFIKRtWPhTXfxezkEHbAK7Vu2KaG', 1),
+('HaiPham2', 'HaiPham2a', 'haipham2@example.com', '$2a$12$4OD6G/0peAQniCtESBi8lOp3yDcjar1h68xS81GivPDEY6aAXr5JW', 1),
+('HaiPham3', 'HaiPham3a', 'haipham3@example.com', '$2a$12$Kz9lCK7tyqKfOSPvyQemX.V98UP0ZBHpBftucdLsvOn/kWEQ9k/v6', 1);
+
+
+
+
+-- Thêm dữ liệu mẫu vào bảng account_roles
+INSERT INTO account_roles (account_id, role_id) VALUES
+('HaiPham1', (SELECT role_id FROM Roles WHERE ma = 'HaiPham1')),
+('HaiPham1', (SELECT role_id FROM Roles WHERE ma = 'HaiPham2')),
+('HaiPham3', (SELECT role_id FROM Roles WHERE ma = 'HaiPham3'));
+
+
+
 
 -- Thêm dữ liệu mẫu vào bảng PhongBan
 INSERT INTO PhongBan (ma_phong_ban, ten_phong_ban) VALUES 
@@ -194,18 +217,18 @@ VALUES
 -- Thêm dữ liệu mẫu vào bảng CV
 INSERT INTO CV (maHoSo, apply_datetime, full_name, gender, email, tel, city, job_name, tong_nam_kinh_nghiem, note, link_cv, nguon_tuyen_dung, trang_thai, share, hr_user_id)
 VALUES
-('HS001', '2024-09-01', 'Nguyễn Văn A', N'Nam', 'nguyenvana@example.com', '0912345678', N'Hà Nội', N'Lập trình viên', 3.5, N'Có kinh nghiệm về Java', 'http://example.com/cv_nguyenvana', 'LinkedIn', N'Đậu Phỏng Vấn', 1, 1),
-('HS002', '2024-09-02', 'Trần Thị B', N'Nữ', 'tranthib@example.com', '0987654321', N'Hồ Chí Minh', N'Kiểm thử', 2.0, N'Tốt nghiệp ngành CNTT', 'http://example.com/cv_tranthib', 'Referral', N'Chưa Phỏng', 0, 2),
-('HS003', '2024-09-03', 'Lê Văn C', N'Nam', 'levanc@example.com', '0901234567', N'Đà Nẵng', N'Quản lý dự án', 7.0, N'Quản lý dự án phần mềm', 'http://example.com/cv_levanc', 'Facebook', N'Rớt Phỏng Vấn', 1, 3),
-('HS004', '2024-09-04', 'Phạm Thị D', N'Nữ', 'phamthid@example.com', '0934567890', N'Cần Thơ', N'BA', 5.0, N'Kinh nghiệm BA 5 năm', 'http://example.com/cv_phamthid', 'TopCV', N'Cân Nhắc Sau', 0, 4),
-('HS005', '2024-09-05', 'Đỗ Văn E', N'Nam', 'dovane@example.com', '0923456789', N'Hải Phòng', N'Nhà thiết kế', 4.0, N'Thiết kế đồ họa', 'http://example.com/cv_dovane', 'LinkedIn', N'Nghỉ Việc', 0, 5),
-('HS006', '2024-09-06', 'Hoàng Thị F', N'Nữ', 'hoangthif@example.com', '0945678912', N'Quảng Ninh', N'Marketing', 1.5, N'Kinh nghiệm marketing', 'http://example.com/cv_hoangthif', 'Referral', N'Bị Thôi Việc', 1, 6),
-('HS007', '2024-09-07', 'Võ Văn G', N'Nam', 'vovang@example.com', '0956789123', N'Huế', 'QA', 6.0, N'Kiểm thử phần mềm', 'http://example.com/cv_vovang', 'LinkedIn', N'Đậu Phỏng Vấn', 1, 7),
-('HS008', '2024-09-08', 'Vũ Thị H', N'Nữ', 'vuthih@example.com', '0967891234', N'Đà Nẵng', 'HR', 4.5, N'Quản lý nhân sự', 'http://example.com/cv_vuthih', 'TopCV', N'Rớt Phỏng Vấn', 0, 1),
-('HS009', '2024-09-09', 'Nguyễn Văn I', N'Nam', 'nguyenvani@example.com', '0978912345', N'Hà Nội', N'Lập trình viên', 2.0, N'Lập trình C#', 'http://example.com/cv_nguyenvani', 'LinkedIn', N'Cân Nhắc Sau', 1, 2),
-('HS010', '2024-09-10', 'Trần Thị J', N'Nữ', 'tranthij@example.com', '0989123456', N'TP HCM', N'Kiểm thử', 3.0, N'Kiểm thử tự động', 'http://example.com/cv_tranthij', 'Referral', N'Chưa Phỏng', 0, 3),
-('HS011', '2024-09-11', 'Lê Văn K', N'Nam', 'levank@example.com', '0991234567', N'Huế', 'BA', 2.5, N'Tư vấn nghiệp vụ', 'http://example.com/cv_levank', 'Facebook', N'Đậu Phỏng Vấn', 1, 4),
-('HS012', '2024-09-12', 'Phạm Thị L',    N'Nữ', 'phamthil@example.com', '0909876543', N'Hà Nội', N'Marketing', 3.0, N'Digital marketing', 'http://example.com/cv_phamthil', 'LinkedIn', N'Nghỉ Việc', 1, 5);
+('HS001', '2024-09-01', N'Nguyễn Văn A', N'Nam', 'nguyenvana@example.com', '0912345678', N'Hà Nội', N'Lập trình viên', 3.5, N'Có kinh nghiệm về Java', 'http://example.com/cv_nguyenvana', 'LinkedIn', N'Đậu Phỏng Vấn', 1, 1),
+('HS002', '2024-09-02', N'Trần Thị B', N'Nữ', 'tranthib@example.com', '0987654321', N'Hồ Chí Minh', N'Kiểm thử', 2.0, N'Tốt nghiệp ngành CNTT', 'http://example.com/cv_tranthib', 'Referral', N'Chưa Phỏng', 0, 2),
+('HS003', '2024-09-03', N'Lê Văn C', N'Nam', 'levanc@example.com', '0901234567', N'Đà Nẵng', N'Quản lý dự án', 7.0, N'Quản lý dự án phần mềm', 'http://example.com/cv_levanc', 'Facebook', N'Rớt Phỏng Vấn', 1, 3),
+('HS004', '2024-09-04', N'Phạm Thị D', N'Nữ', 'phamthid@example.com', '0934567890', N'Cần Thơ', N'BA', 5.0, N'Kinh nghiệm BA 5 năm', 'http://example.com/cv_phamthid', 'TopCV', N'Cân Nhắc Sau', 0, 4),
+('HS005', '2024-09-05', N'Đỗ Văn E', N'Nam', 'dovane@example.com', '0923456789', N'Hải Phòng', N'Nhà thiết kế', 4.0, N'Thiết kế đồ họa', 'http://example.com/cv_dovane', 'LinkedIn', N'Nghỉ Việc', 0, 5),
+('HS006', '2024-09-06', N'Hoàng Thị F', N'Nữ', 'hoangthif@example.com', '0945678912', N'Quảng Ninh', N'Marketing', 1.5, N'Kinh nghiệm marketing', 'http://example.com/cv_hoangthif', 'Referral', N'Bị Thôi Việc', 1, 6),
+('HS007', '2024-09-07', N'Võ Văn G', N'Nam', 'vovang@example.com', '0956789123', N'Huế', 'QA', 6.0, N'Kiểm thử phần mềm', 'http://example.com/cv_vovang', 'LinkedIn', N'Đậu Phỏng Vấn', 1, 7),
+('HS008', '2024-09-08', N'Vũ Thị H', N'Nữ', 'vuthih@example.com', '0967891234', N'Đà Nẵng', 'HR', 4.5, N'Quản lý nhân sự', 'http://example.com/cv_vuthih', 'TopCV', N'Rớt Phỏng Vấn', 0, 1),
+('HS009', '2024-09-09', N'Nguyễn Văn I', N'Nam', 'nguyenvani@example.com', '0978912345', N'Hà Nội', N'Lập trình viên', 2.0, N'Lập trình C#', 'http://example.com/cv_nguyenvani', 'LinkedIn', N'Cân Nhắc Sau', 1, 2),
+('HS010', '2024-09-10', N'Trần Thị J', N'Nữ', 'tranthij@example.com', '0989123456', N'TP HCM', N'Kiểm thử', 3.0, N'Kiểm thử tự động', 'http://example.com/cv_tranthij', 'Referral', N'Chưa Phỏng', 0, 3),
+('HS011', '2024-09-11', N'Lê Văn K', N'Nam', 'levank@example.com', '0991234567', N'Huế', 'BA', 2.5, N'Tư vấn nghiệp vụ', 'http://example.com/cv_levank', 'Facebook', N'Đậu Phỏng Vấn', 1, 4),
+('HS012', '2024-09-12', N'Phạm Thị L',    N'Nữ', 'phamthil@example.com', '0909876543', N'Hà Nội', N'Marketing', 3.0, N'Digital marketing', 'http://example.com/cv_phamthil', 'LinkedIn', N'Nghỉ Việc', 1, 5);
 
 
 
